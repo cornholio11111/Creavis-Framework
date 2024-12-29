@@ -1,6 +1,7 @@
-local EnumsList = require(script.Enums)
+local EnumsList = require(script.EnumsList)
 
 local EnumsHandler = {}
+EnumsHandler.Mode = "Server"
 EnumsHandler.EnumsList = EnumsList
 
 function EnumsHandler.GetEnumLists()

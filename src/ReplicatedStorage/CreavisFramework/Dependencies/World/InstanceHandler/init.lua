@@ -13,7 +13,7 @@ end
 
 function InstanceHandler:LoadInstances()
     for __index, OBJ in pairs(script.Instances) do
-        if OBJ:IsA("Module") then
+        if OBJ:IsA("ModuleScript") then
             local requireModule = require(OBJ)
 
             self.InstanceTemplates[OBJ.Name] = requireModule
