@@ -24,171 +24,68 @@
 		"description": "Roblox Service"
 	},
 
-
-	// Knit Specific
-
-	"Knit": {
-		"prefix": ["Knit"],
-		"body": ["local Knit = require(game:GetService('ReplicatedStorage').Packages.Knit)"],
-		"description": "Require the Knit module"
-	},
-
-	"Knit Service": {
-		"prefix": ["KnitService"],
+	"Dependency": {
+		"prefix": ["Dependency", "dependency"],
 		"body": [
-			"local Knit = require(game:GetService('ReplicatedStorage').Packages.Knit)",
+			"local ${0:$TM_FILENAME_BASE} = {}",
+			"${0:$TM_FILENAME_BASE}.__index = ${0:$TM_FILENAME_BASE}",
 			"",
-			"local ${0:$TM_FILENAME_BASE} = Knit.CreateService {",
-			"\tName = \"${0:$TM_FILENAME_BASE}\",",
-			"\tClient = {},",
+			"",
+			"function ${0:$TM_FILENAME_BASE}.Initialize(CreavisFramework)",
+			"\tlocal self = setmetatable({}, ${0:$TM_FILENAME_BASE})",
+			"\tself.CreavisFrameworkReference = CreavisFramework",
+			"\treturn self",
+			"end",
+			"",
+			"",
+			"function ${0:$TM_FILENAME_BASE}:Connect()",
+			"\t",
+			"end",
+			"",
+			"",
+			"return ${0:$TM_FILENAME_BASE}",
+			""
+		],
+		"description": "Dependency for CreavisFramework"
+	},
+	
+	"Instance": {
+		"prefix": ["Instance", "instance"],
+		"body": [
+			"return {",
+			"    _DisplayName ='${0:$TM_FILENAME_BASE}',",
+			"    _IconID = '000000',",
+			"    _Description = '',",
 			"}",
-			"",
-			"",
-			"function ${0:$TM_FILENAME_BASE}:KnitStart()",
-			"\t",
-			"end",
-			"",
-			"",
-			"function ${0:$TM_FILENAME_BASE}:KnitInit()",
-			"\t",
-			"end",
-			"",
-			"",
-			"return ${0:$TM_FILENAME_BASE}",
+
 			""
 		],
-		"description": "Knit Service template"
+		"description": "Instance template for creavis framework world"
 	},
 
-	"Knit Controller": {
-		"prefix": ["KnitController"],
+	"System": {
+		"prefix": ["System", "system"],
 		"body": [
-			"local Knit = require(game:GetService('ReplicatedStorage').Packages.Knit)",
-			"",
-			"local ${0:$TM_FILENAME_BASE} = Knit.CreateController { Name = \"${0:$TM_FILENAME_BASE}\" }",
-			"",
-			"",
-			"function ${0:$TM_FILENAME_BASE}:KnitStart()",
-			"\t",
-			"end",
+			"local ${0:$TM_FILENAME_BASE}System = {}",
+			"${0:$TM_FILENAME_BASE}System.__index = ${0:$TM_FILENAME_BASE}System",
 			"",
 			"",
-			"function ${0:$TM_FILENAME_BASE}:KnitInit()",
-			"\t",
-			"end",
-			"",
-			"",
-			"return ${0:$TM_FILENAME_BASE}",
-			""
-		],
-		"description": "Knit Controller template"
-	},
-
-	"Knit Require": {
-		"prefix": ["KnitRequire"],
-		"body": ["local ${1:Name} = require(Knit.${2:Util}.${1:Name})"],
-		"description": "Knit Require template"
-	},
-
-	"Class": {
-		"prefix": ["Class"],
-		"body": [
-			"local ${0:$TM_FILENAME_BASE} = {}",
-			"${0:$TM_FILENAME_BASE}.__index = ${0:$TM_FILENAME_BASE}",
-			"",
-			"",
-			"function ${0:$TM_FILENAME_BASE}.new()",
-			"\tlocal self = setmetatable({}, ${0:$TM_FILENAME_BASE})",
+			"function ${0:$TM_FILENAME_BASE}System.new()",
+			"\tlocal self = setmetatable({}, ${0:$TM_FILENAME_BASE}System)",
+			"\tself:Connect()",
 			"\treturn self",
 			"end",
 			"",
 			"",
-			"function ${0:$TM_FILENAME_BASE}:Destroy()",
+			"function ${0:$TM_FILENAME_BASE}System:Connect()",
 			"\t",
 			"end",
 			"",
 			"",
-			"return ${0:$TM_FILENAME_BASE}",
+			"return ${0:$TM_FILENAME_BASE}System",
 			""
 		],
-		"description": "Lua Class"
+		"description": "System for CreavisFramework"
 	},
-
-	"Ability": { 										// Ability
-		"prefix": ["Ability"],
-		"body": [
-			"local ${0:$TM_FILENAME_BASE} = {}",
-			"${0:$TM_FILENAME_BASE}.__index = ${0:$TM_FILENAME_BASE}",
-			"",
-			"function ${0:$TM_FILENAME_BASE}.new()",
-			"\tlocal self = setmetatable({}, ${0:$TM_FILENAME_BASE})",
-			"\tself:Init()",
-			"\treturn self",
-			"end",
-			"",
-			"function ${0:$TM_FILENAME_BASE}:Init()",
-			"\t",
-			"end",
-			"",
-			"function ${0:$TM_FILENAME_BASE}:Trigger(Player:Player)",
-			"\t",
-			"end",
-			"",
-			"function ${0:$TM_FILENAME_BASE}:Destroy()",
-			"\t",
-			"end",
-			"",
-			"return ${0:$TM_FILENAME_BASE}",
-		],
-		"description": "Lua Class"
-	},
-
-	"Gadget": { 										// Gadget
-	"prefix": ["Gadget"],
-	"body": [
-		"local ${0:$TM_FILENAME_BASE} = {}",
-		"${0:$TM_FILENAME_BASE}.__index = ${0:$TM_FILENAME_BASE}",
-		"",
-		"function ${0:$TM_FILENAME_BASE}.new(Owner: Player, CameraPosition, CameraLookVector, GadgetCore)",
-		"\tlocal self = setmetatable({}, ${0:$TM_FILENAME_BASE})",
-		"\tself.Owner = Owner",
-		"",
-		"\tself.CameraPosition = CameraPosition",
-    	"\tself.CameraLookVector = CameraLookVector",
-		"",
-		"\tself.GadgetCore = GadgetCore",
-		"\tself.EGadgetType = GadgetCore.EGadgetType -- << Throwable, Placeable, Visual",
-		"\tself.Asset",
-		"",
-		"\treturn self",
-		"end",
-		"",
-		"function ${0:$TM_FILENAME_BASE}:Trigger()",
-		"\t",
-		"end",
-		"",
-		"return ${0:$TM_FILENAME_BASE}",
-	],
-	"description": "Lua Class"
-},
-
-	"GamemodePreset": { 										// GamemodePreset
-	"prefix": ["GamemodePreset"],
-	"body": [
-		"local Assets = game:GetService('ReplicatedStorage'):WaitForChild('Assets')",
-		"",
-		"local Addons = {}",
-		"",
-		"return {",
-		"   Display_Name = 'DISPLAY NAME',",
-		"   Is_Ranked = true,",
-		"   Addons = Addons,",
-		"   TimeLimit = 999,",
-		"   ScoreToWin = 999",
-		"}"
-	],
-	"description": "Lua Class"
-},
-
 }
 
