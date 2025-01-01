@@ -8,10 +8,18 @@ CreavisFramework.Configurations = {
     MaxWorldSize_KB = 4000; -- 4 MB is the MAX SIZE
     MaxWorldsPerUser = -1; -- How many worlds, mods, or what ever can the user make? (-1 mean inf)
 
-    Script_Editing = false;
+    Script_Editing = false; -- Allows the user to add, remove, or change game code.
     World_Editing = false;
     UI_Editing = false;
 }
+
+--[[
+
+    PLEASE NOTE:
+
+    ALL code past here shouldn't be changed unless you understand how this system works!!!
+
+]]--
 
 CreavisFramework.Dependencies = {} -- // Stores Dependencies data
 
@@ -55,12 +63,6 @@ function CreavisFramework.new()
     self.IsClient = isClient
     self.HasBegunPlay = false
     self.PlayerArray = {}
-
-    if isServer then
-        self.Mode = "Server"
-    elseif isClient then
-        self.Mode = "Client"
-    end
 
     -- // Sets the Dependencies
     AutoRequireDependencies(self)

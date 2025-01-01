@@ -7,7 +7,20 @@ Dependencies are systems that our Creavis Engine requires to work
 - Event Handler
 
 - Script Handler
+    > In-Game IDE
+    > Saving & Loading
+
+- Data Handler
+    > Compressor
+
+- Toolbox Adaptor
+    > Asset Searching
+    > Asset Importing
+    > Favorites Page
 
 - World
     > Instance Handler
+    > Player Handler
+
+> Instance Types
     > 
