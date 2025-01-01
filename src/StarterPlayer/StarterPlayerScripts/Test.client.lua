@@ -8,6 +8,8 @@ MainWindow:CreateContext()
 -- Access the context
 local Context = MainWindow.Context
 
+Context:SetStyleSheet(require(ReplicatedStorage.RuGui.StyleSheet))
+
 -- Create Dock Frames
 local TopToolbar = Context:CreateDockFrame("TopToolbar", {
     Position = UDim2.new(0.5, 0, 0.05, 0),
@@ -39,8 +41,6 @@ Context:CreateWidget("OutputPanel", {
     Position = UDim2.new(0.5, 0, 0.9, 0),
     Size = UDim2.new(1, 0, 0.2, 0)
 }, "BottomDock")
-
-Context:SetStyleSheet(require(ReplicatedStorage.RuGui.StyleSheet))
 
 -- Add Toolbar Items
 local ToolbarButton = Instance.new("TextButton", TopToolbar.Dock)

@@ -7,21 +7,15 @@ return {
     },
     
     frame = {
-        BackgroundColor3 = Color3.fromRGB(30, 30, 30),
-        borderColor = Color3.fromRGB(180, 180, 180),
-        borderSizePixel = 2,
+        BackgroundColor3 = Color3.fromRGB(30, 30, 30)
     },
 
     widget = {
         BackgroundColor3 = Color3.fromRGB(245, 75, 75),
-        borderColor = Color3.fromRGB(180, 180, 180),
-        borderSizePixel = 2,
     },
     
     window = {
         BackgroundColor3 = Color3.fromRGB(50, 50, 50),
-        borderColor = Color3.fromRGB(255, 255, 255),
-        borderSizePixel = 4,
     },
     
     textLabel = {

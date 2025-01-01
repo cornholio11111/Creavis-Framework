@@ -25,11 +25,10 @@ end
 -- // Configuration
 local function ApplyStyle(Context, Object)
    local StyleSheetData = Context.StyleSheet
-
    local OBJStyle = StyleSheetData[string.lower(Object:GetAttribute("Type"))]
-   
+
    if OBJStyle then
-    for _index, value in ipairs(OBJStyle) do
+    for _index, value in pairs(OBJStyle) do
         if Object[_index] then
             Object[_index] = value
         end
@@ -61,7 +60,7 @@ function RuGuiCreateContext:CreateDockFrame(Title:string, Properties:{Position:U
 
     local Dock = Instance.new("Frame", self.RuGuiData.WindowScreenGui.Docks)
     Dock.Name = Title
-    Dock.LayoutOrder = #self.Docks + 1
+    Dock.ZIndex = #self.Docks + 1
     Dock.AnchorPoint = Vector2.new(.5, .5)
 
     Dock.BackgroundTransparency = 1
@@ -73,7 +72,8 @@ function RuGuiCreateContext:CreateDockFrame(Title:string, Properties:{Position:U
     Dock:SetAttribute("Type", "Dock")
 
     self.Docks[string.lower(Title)] = Dock
-    return {Dock = Dock, Index = Dock.LayoutOrder}
+    ApplyStyle(self, Dock)
+    return {Dock = Dock, Index = Dock.ZIndex}
 end
 
 function RuGuiCreateContext:CreateWidget(Title:string, Properties:{Position:UDim2, Size:UDim2, StyleID:string?}, DockAt:string?)
@@ -82,6 +82,7 @@ function RuGuiCreateContext:CreateWidget(Title:string, Properties:{Position:UDim
 
     local Widget = Instance.new("Frame", self.RuGuiData.WindowScreenGui.Widgets)
     Widget.Name = Title
+    Widget.ZIndex = #self.Widgets + 1
     Widget.AnchorPoint = Vector2.new(.5, .5)
     Widget:SetAttribute("Type", "Widget")
     Widget:SetAttribute("Style", Properties.StyleID)
@@ -130,6 +131,10 @@ function RuGuiCreateContext:CreateWidget(Title:string, Properties:{Position:UDim
 
     Widget:SetAttribute("Docked", (DockAt ~= "None" and DockReference ~= nil))
     Widget:SetAttribute("DockedAt", DockAt)
+
+    self.Widgets[string.lower(Title)] = Widget
+    ApplyStyle(self, Widget)
+    return {Widget = Widget, Index = Widget.ZIndex}
 end
 
 function RuGuiCreateContext:CreateFrame(Title, Properties:{ParentWidget:string, Position:UDim2, Size:UDim2, StyleID:string?})
