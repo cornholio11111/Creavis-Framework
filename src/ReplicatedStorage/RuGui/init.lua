@@ -69,7 +69,7 @@ function RuGuiCreateContext:CreateDockFrame(Title:string, Properties:{Position:U
 
     local Dock = Instance.new("Frame", self.RuGuiData.WindowScreenGui.Docks)
     Dock.Name = Title
-    Dock.ZIndex = #self.Docks + 1
+    Dock.LayoutOrder = #self.Docks + 1
     Dock.AnchorPoint = Vector2.new(.5, .5)
 
     Dock.BackgroundTransparency = 1
@@ -80,10 +80,12 @@ function RuGuiCreateContext:CreateDockFrame(Title:string, Properties:{Position:U
     Dock:SetAttribute("Dockable", true) -- << If something can dock to this DockFrame
     Dock:SetAttribute("Type", "Dock")
 
+    Dock:SetAttribute("Style", "Dock")
+
     self.Docks[string.lower(Title)] = Dock
     ApplyStyle(self, Dock)
 
-    return {Dock = Dock, Index = Dock.ZIndex}
+    return {Dock = Dock, Index = Dock.LayoutOrder}
 end
 
 -- // Widgets are draggable its a cool system
@@ -93,7 +95,7 @@ function RuGuiCreateContext:CreateWidget(Title:string, Properties:{Position:UDim
 
     local Widget = Instance.new("Frame", self.RuGuiData.WindowScreenGui.Widgets)
     Widget.Name = Title
-    Widget.ZIndex = #self.Widgets + 1
+    Widget.LayoutOrder = #self.Widgets + 1
     Widget.AnchorPoint = Vector2.new(.5, .5)
     Widget:SetAttribute("Type", "Widget")
     Widget:SetAttribute("Style", "Widget")
@@ -147,7 +149,7 @@ function RuGuiCreateContext:CreateWidget(Title:string, Properties:{Position:UDim
     self.Widgets[string.lower(Title)] = {Widget = Widget}
     ApplyStyle(self, DragHandle)
     ApplyStyle(self, Widget)
-    return {Widget = Widget, Index = Widget.ZIndex}
+    return {Widget = Widget, Index = Widget.LayoutOrder}
 end
 
 -- // Frames get added into widgets
@@ -165,7 +167,7 @@ function RuGuiCreateContext:CreateFrame(Title, Properties:{ParentWidget:string, 
 
     local Frame = Instance.new("Frame")
     Frame.Name = Title
-    Frame.ZIndex = #WidgetReference:GetChildren() + 1
+    Frame.LayoutOrder = #WidgetReference:GetChildren() + 1
     Frame.AnchorPoint = Vector2.new(.5, .5)
     Frame:SetAttribute("Type", "UIFrame")
     Frame:SetAttribute("Style", "UIFrame")
@@ -173,7 +175,7 @@ function RuGuiCreateContext:CreateFrame(Title, Properties:{ParentWidget:string, 
     Frame.Position = Properties.Position
     Frame.Size = Properties.Size
 
-    return {Frame = Frame, Index = Frame.ZIndex}
+    return {Frame = Frame, Index = Frame.LayoutOrder}
 end
 
 function RuGuiCreateContext:CreateMenu(Title:string, Properties:{UseListLayout:boolean?, SortOrder:Enum.SortOrder, Position:UDim2, Size:UDim2}, WidgetID:string)
@@ -191,7 +193,7 @@ function RuGuiCreateContext:CreateMenu(Title:string, Properties:{UseListLayout:b
 
     local Menu = Instance.new("Frame")
     Menu.Name = Title
-    Menu.ZIndex = #WidgetReference:GetChildren() + 1
+    Menu.LayoutOrder = #WidgetReference:GetChildren() + 1
     Menu.AnchorPoint = Vector2.new(.5, .5)
     Menu:SetAttribute("Type", "UIMenu")
     Menu:SetAttribute("Style", "UIMenu")
@@ -210,11 +212,64 @@ function RuGuiCreateContext:CreateMenu(Title:string, Properties:{UseListLayout:b
     SortLayout.Name = "Layout"
     SortLayout.SortOrder = Properties.SortOrder or Enum.SortOrder.LayoutOrder
 
-    return {Menu = Menu, Index = Menu.ZIndex}
+    return {Menu = Menu, Index = Menu.LayoutOrder}
 end
 
-function RuGuiCreateContext:CreateButton(Title:string, Properties: {Position:UDim2, Size:UDim2, Text:string?, IsImage:boolean?, Image:string?}, ParentReference:UIBase)
+function RuGuiCreateContext:CreateHorizontalList(Title:string, Properties: {Position:UDim2, Size:UDim2, AutoAligned:boolean?, StyleID:string?}, ParentReference:UIBase)
+    Properties.StyleID = Properties.StyleID or "HorizontalList"
+    Properties.AutoAligned = Properties.AutoAligned or true
 
+    local HorizontalList = Instance.new("Frame")
+    HorizontalList.Name = Title
+
+    HorizontalList.LayoutOrder = #ParentReference:GetChildren() + 1
+    HorizontalList.AnchorPoint = Vector2.new(.5, .5)
+    HorizontalList:SetAttribute("Type", "HorizontalList")
+    HorizontalList:SetAttribute("Style", Properties.StyleID)
+
+    if Properties.AutoAligned == false then 
+        HorizontalList.Size = Properties.Size
+        HorizontalList.Position = Properties.Position
+    end
+
+    HorizontalList.Parent = ParentReference
+    return {List = HorizontalList, Index = HorizontalList.LayoutOrder}
+end
+
+function RuGuiCreateContext:CreateButton(Title:string, Properties: {Position:UDim2, Size:UDim2, Text:string?, IsImage:boolean?, Image:string?, StyleID:string?}, ParentReference:UIBase)
+    local Button
+    local _type
+
+    Properties.StyleID = Properties.StyleID or "None"
+
+    if Properties.IsImage then
+        Button = Instance.new("ImageButton")
+        Button.Image = Properties.Image
+        _type = "ImageButton"
+    else
+        Button = Instance.new("TextButton")
+        Button.Text = Properties.Text
+        _type = "TextButton"
+    end
+
+    if Properties.StyleID == "None" then
+        Properties.StyleID = _type
+    end
+
+    Button.Name = Title
+
+    Button.LayoutOrder = #ParentReference:GetChildren() + 1
+    Button.AnchorPoint = Vector2.new(.5, .5)
+    Button:SetAttribute("Type", _type)
+    Button:SetAttribute("Style", Properties.StyleID)
+
+    if not Properties.AutoAligned then
+        Button.Size = Properties.Size
+        Button.Position = Properties.Position
+    end
+
+    Button.Parent = ParentReference
+    return {Button = Button, Index = Button.LayoutOrder}
 end
 
 function RuGuiCreateContext:CreateToggle(Title:string, Properties: {Position:UDim2, Size:UDim2, Disabled:boolean?, Toggled:boolean?, Image:string?}, ParentReference:UIBase)
