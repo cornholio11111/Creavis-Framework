@@ -2,25 +2,33 @@
   "name": "Creavis-Framework",
   "tree": {
     "$className": "DataModel",
-
+    
     "ReplicatedStorage": {
+      "$className": "ReplicatedStorage",
+      "$ignoreUnknownInstances": true,
       "$path": "src/ReplicatedStorage"
     },
 
     "ServerScriptService": {
+      "$className": "ServerScriptService",
+      "$ignoreUnknownInstances": true,
       "$path": "src/ServerScriptService"
     },
 
     "StarterPlayer": {
-      "$path": "src/StarterPlayer",
-
-      "StarterPlayerScripts": {
-        "$path": "src/StarterPlayer/StarterPlayerScripts"
+      "$className": "StarterPlayer",
+      "StarterCharacterScripts": {
+        "$className": "StarterCharacterScripts",
+        "$ignoreUnknownInstances": true,
+        "$path": "src/StarterPlayer/StarterCharacterScripts"
       },
 
-      "StarterCharacterScripts": {
-        "$path": "src/StarterPlayer/StarterCharacterScripts"
-      }
+      "StarterPlayerScripts": {
+        "$className": "StarterPlayerScripts",
+        "$ignoreUnknownInstances": true,
+        "$path": "src/StarterPlayer/StarterPlayerScripts"
+      },
+      "$ignoreUnknownInstances": true
     }
   }
 }

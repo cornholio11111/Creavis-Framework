@@ -100,21 +100,27 @@ local ExplorerWidget = Context:CreateWidget("ExplorerPanel", {
     Size = UDim2.new(0.2, 0, 0.8, 0)
 }, "LeftDock")
 
--- Add a horizontal list to the Explorer
-local ExplorerFrame = Context:CreateHorizontalList("Test", {AutoAligned = true}, ExplorerWidget.Widget)
-local UIListLayout = Instance.new("UIListLayout", ExplorerFrame.List)
-UIListLayout.FillDirection = Enum.FillDirection.Horizontal
-UIListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-UIListLayout.Padding = UDim.new(0, 5)
+local ExplorerMenu = Context:CreateMenu("ExplorerMenu", {
+    Position = UDim2.new(0.5, 0, 0.5, 0),
+    Size = UDim2.new(1, 0, 1, 0)
+}, "ExplorerPanel")
+
+local function CreateInstanceBar(i)
+    local ExplorerFrame = Context:CreateHorizontalList("ExplorerList", {
+        Position = UDim2.new(0.5, 0, 0.5, 0),
+        Size = UDim2.new(1, 0, 1, 0)
+    }, ExplorerMenu.Menu)
+
+    Context:CreateButton("Button " .. i, {
+        Text = "Button " .. tostring(i),
+        Size = UDim2.fromScale(.5, 1),
+        Position = UDim2.fromScale(.8, 0)
+    }, ExplorerMenu.Menu)
+end
 
 -- Create buttons using :CreateButton
 for i = 1, 5 do
-    Context:CreateButton("Button " .. i, {
-        Parent = ExplorerFrame.List,
-        Size = UDim2.new(0, 100, 0, 50),
-        Text = "Button " .. tostring(i)
-    }, ExplorerWidget.Widget)
+    CreateInstanceBar(i)
 end
 
 -- Add Toolbar Items
