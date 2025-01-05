@@ -405,7 +405,7 @@ end
 --#endregion
 
 function RuGuiCreateContext:Terminate()
-
+    -->> Any clean up may needed should be added here
 end
 
 -- // RuGui Core Code
@@ -466,7 +466,9 @@ end
 
 -- // Removal
 function RuGui:Terminate()
-    
+    self.WindowScreenGui:Destory()
+
+    self.Context:Terminate()
 end
 
 return RuGui

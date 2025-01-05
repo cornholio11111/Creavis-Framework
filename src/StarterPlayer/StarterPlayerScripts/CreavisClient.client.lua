@@ -1,5 +1,6 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local CreavisFramework = require(ReplicatedStorage.CreavisFramework)
+local CreavisEngine = require(ReplicatedStorage.CreavisEngine)
 
-local ClientSidedFramework = CreavisFramework.new()
+CreavisEngine = CreavisEngine.Initialize()
 
+CreavisEngine:ToggleStudio()
