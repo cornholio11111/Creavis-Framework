@@ -100,22 +100,18 @@ local ExplorerWidget = Context:CreateWidget("ExplorerPanel", {
     Size = UDim2.new(0.2, 0, 0.8, 0)
 }, "LeftDock")
 
-local ExplorerMenu = Context:CreateMenu("ExplorerMenu", {
+local ExplorerList = Context:CreateHorizontalList("ExplorerList", {
     Position = UDim2.new(0.5, 0, 0.5, 0),
-    Size = UDim2.new(1, 0, 1, 0)
-}, "ExplorerPanel")
+    Size = UDim2.new(1, 0, 1, 0),
+    UIPadding = UDim.new(.1, 0)
+}, ExplorerWidget.Widget)
 
 local function CreateInstanceBar(i)
-    local ExplorerFrame = Context:CreateHorizontalList("ExplorerList", {
-        Position = UDim2.new(0.5, 0, 0.5, 0),
-        Size = UDim2.new(1, 0, 1, 0)
-    }, ExplorerMenu.Menu)
-
     Context:CreateButton("Button " .. i, {
         Text = "Button " .. tostring(i),
-        Size = UDim2.fromScale(.5, 1),
-        Position = UDim2.fromScale(.8, 0)
-    }, ExplorerMenu.Menu)
+        Size = UDim2.fromScale(1, .1),
+        Position = UDim2.fromScale(.8, 0),
+    }, ExplorerList.List)
 end
 
 -- Create buttons using :CreateButton

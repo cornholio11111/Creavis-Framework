@@ -5,7 +5,7 @@ local CreavisEngine = {
     State = { -- >> Where booleans & enums are placed
         Studio = {
             InStudio = false,
-            Running = false,
+            Running = false
         };
 
 
@@ -25,7 +25,15 @@ function CreavisEngine.Initialize()
 end
 
 function CreavisEngine:ToggleStudio()
-    
+    self.State.Studio.InStudio = not self.State.Studio.InStudio
+
+    if self.State.Studio.InStudio then
+        -- >> Load Studio
+    end
+
+    if not self.State.Studio.InStudio then
+        -- >> Unload Studio
+    end
 end
 
 return CreavisEngine

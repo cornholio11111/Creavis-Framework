@@ -21,6 +21,9 @@ function RuGuiCreateContext.new(RuGuiData:{})
     self.Docks = {}
     self.Widgets = {}
 
+    self.CurrentDraggedWidget = nil
+    self.LastDraggedWidget = nil
+
     return self
 end
 
@@ -155,17 +158,20 @@ function RuGuiCreateContext:CreateWidget(Title:string, Properties:{Position:UDim
     local Widget = Instance.new("Frame", self.RuGuiData.WindowBaseFrame.Widgets)
     Widget.Name = Title
     Widget.LayoutOrder = #self.Widgets + 1
+    Widget.ZIndex = #self.Widgets + 1
     Widget.AnchorPoint = Vector2.new(.5, .5)
     Widget:SetAttribute("Type", "Widget")
     Widget:SetAttribute("Style", "Widget")
+    Widget:SetAttribute("D_Index", Widget.ZIndex)
 
     local DragHandle = Instance.new("Frame")
-    DragHandle.Size = UDim2.new(1, 0, 0.1, 0) -- 10% of the widget's height
-    DragHandle.AnchorPoint = Vector2.new(0.5, 0) -- Anchor at the top center
+    DragHandle.Size = UDim2.new(1, 0, 0.1, 0)
+    DragHandle.AnchorPoint = Vector2.new(0.5, 0)
     DragHandle.Position = UDim2.new(0.5, 0, 0, 0)
     DragHandle.BackgroundColor3 = Color3.fromRGB(50, 50, 150)
     DragHandle.Name = "DragHandle"
     DragHandle.ZIndex = 2
+    DragHandle.LayoutOrder = 2
     DragHandle.Parent = Widget
     DragHandle:SetAttribute("Type", "WidgetHeader")
     DragHandle:SetAttribute("Style", "WidgetHeader")
@@ -178,21 +184,18 @@ function RuGuiCreateContext:CreateWidget(Title:string, Properties:{Position:UDim
 
     local CanEditDragDetector = true
     local IsDragging = false
-
     local wannaDock = nil
+
+    local function BringToFront(widget)
+        for _, w in pairs(self.Widgets) do
+            w.ZIndex = w:GetAttribute("D_Index")
+        end
+        widget.ZIndex = 100
+    end
 
     self.Connections["DragRenderStepped"] = RunService:BindToRenderStep("DragRenderStepped", 0, function()
         if IsDragging then
-
-            if wannaDock ~= nil then
-                if IsNearDock(Widget, wannaDock, 30) then
-                    wannaDock = wannaDock
-                else
-                    wannaDock = nil
-                end
-            end
-
-            for _index, dock in ipairs(self.Docks) do
+            for _, dock in ipairs(self.Docks) do
                 if IsNearDock(Widget, dock, 30) then
                     wannaDock = dock.Name
                 end
@@ -203,6 +206,8 @@ function RuGuiCreateContext:CreateWidget(Title:string, Properties:{Position:UDim
     DragDetector.DragStart:Connect(function()
         IsDragging = true
         CanEditDragDetector = false
+        BringToFront(Widget)
+        self.CurrentDraggedWidget = Title
     end)
 
     DragDetector.DragEnd:Connect(function()
@@ -212,15 +217,17 @@ function RuGuiCreateContext:CreateWidget(Title:string, Properties:{Position:UDim
         if wannaDock ~= nil then
             self:DockWidget(Title, wannaDock)
         end
+
+        self.LastDraggedWidget = Title
     end)
 
-    DragHandle.MouseEnter:Connect(function(x, y)
+    DragHandle.MouseEnter:Connect(function()
         if CanEditDragDetector then
             DragDetector.Enabled = true
         end
     end)
 
-    DragHandle.MouseLeave:Connect(function(x, y)
+    DragHandle.MouseLeave:Connect(function()
         if CanEditDragDetector then
             DragDetector.Enabled = false
         end
@@ -228,12 +235,10 @@ function RuGuiCreateContext:CreateWidget(Title:string, Properties:{Position:UDim
 
     local DockReference = nil
 
-    if DockAt == "None" then -- // Free
+    if DockAt == "None" then
         Widget.Size = Properties.Size
         Widget.Position = Properties.Position
-
-
-    elseif DockAt ~= "None" then -- // Docked
+    else
         DockReference = self.Docks[string.lower(DockAt)]
 
         if not DockReference then
@@ -251,6 +256,7 @@ function RuGuiCreateContext:CreateWidget(Title:string, Properties:{Position:UDim
     self.Widgets[string.lower(Title)] = Widget
     ApplyStyle(self, DragHandle)
     ApplyStyle(self, Widget)
+
     return {Widget = Widget, Index = Widget.LayoutOrder}
 end
 
@@ -329,7 +335,7 @@ function RuGuiCreateContext:CreateMenu(Title:string, Properties:{UseListLayout:b
     return {Menu = Menu, Index = Menu.LayoutOrder}
 end
 
-function RuGuiCreateContext:CreateHorizontalList(Title:string, Properties: {Position:UDim2?, Size:UDim2?, AutoAligned:boolean?, UIPadding:UDim, StyleID:string?}, ParentReference:UIBase)
+function RuGuiCreateContext:CreateHorizontalList(Title:string, Properties: {Position:UDim2?, Size:UDim2?, AutoAligned:boolean?, UIPadding:UDim, StyleID:string?}, ParentReference)
     Properties.StyleID = Properties.StyleID or "HorizontalList"
     Properties.UIPadding = Properties.UIPadding or UDim.new(.25, 0)
 
@@ -382,6 +388,8 @@ function RuGuiCreateContext:CreateButton(Title:string, Properties: {Position:UDi
 
     Button.LayoutOrder = #ParentReference:GetChildren() + 1
     Button.AnchorPoint = Vector2.new(.5, .5)
+    Button.Size = Properties.Size or UDim2.fromScale(.2, .2)
+
     Button:SetAttribute("Type", _type)
     Button:SetAttribute("Style", Properties.StyleID)
 
@@ -427,6 +435,8 @@ function RuGui.CreateWindow(Width:number, Height:number, Title:string)
     self.WindowScreenGui = Instance.new("ScreenGui")
     self.WindowScreenGui.Name = Title
     self.WindowScreenGui.IgnoreGuiInset = true
+    self.WindowScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    self.WindowScreenGui.ClipToDeviceSafeArea = true
 
     -- // creates the window base
     self.WindowBaseFrame = Instance.new("Frame", self.WindowScreenGui)
