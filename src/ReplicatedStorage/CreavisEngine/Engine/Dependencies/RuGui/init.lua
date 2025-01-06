@@ -21,6 +21,8 @@ function RuGuiCreateContext.new(RuGuiData:{})
     self.Docks = {}
     self.Widgets = {}
 
+    self.Objects = {}
+
     self.CurrentDraggedWidget = nil
     self.LastDraggedWidget = nil
 
@@ -145,6 +147,7 @@ function RuGuiCreateContext:CreateDockFrame(Title:string, Properties:{Position:U
     Dock:SetAttribute("Style", "Dock")
 
     self.Docks[string.lower(Title)] = Dock
+    self.Objects[string.lower(Title)] = Dock
     ApplyStyle(self, Dock)
 
     return {Dock = Dock, Index = Dock.LayoutOrder}
@@ -153,6 +156,7 @@ end
 -- // Widgets are draggable its a cool system
 function RuGuiCreateContext:CreateWidget(Title:string, Properties:{Position:UDim2, Size:UDim2, StyleID:string?}, DockAt:string?)
     DockAt = DockAt or "None"
+    print(Title, Properties)
     Properties.StyleID = Properties.StyleID or "None"
 
     local Widget = Instance.new("Frame", self.RuGuiData.WindowBaseFrame.Widgets)
@@ -254,6 +258,7 @@ function RuGuiCreateContext:CreateWidget(Title:string, Properties:{Position:UDim
     Widget:SetAttribute("DockedAt", DockAt)
 
     self.Widgets[string.lower(Title)] = Widget
+    self.Objects[string.lower(Title)] = Widget
     ApplyStyle(self, DragHandle)
     ApplyStyle(self, Widget)
 
@@ -283,6 +288,7 @@ function RuGuiCreateContext:CreateFrame(Title, Properties:{ParentWidget:string, 
     Frame.Position = Properties.Position
     Frame.Size = Properties.Size
 
+    self.Objects[string.lower(Title)] = Frame
     ApplyStyle(self, Frame)
     return {Frame = Frame, Index = Frame.LayoutOrder}
 end
@@ -330,7 +336,7 @@ function RuGuiCreateContext:CreateMenu(Title:string, Properties:{UseListLayout:b
 
     SortLayout.Name = "Layout"
     SortLayout.SortOrder = Properties.SortOrder or Enum.SortOrder.LayoutOrder
-
+    self.Objects[string.lower(Title)] = Menu
     ApplyStyle(self, SortLayout)
     return {Menu = Menu, Index = Menu.LayoutOrder}
 end
@@ -359,6 +365,7 @@ function RuGuiCreateContext:CreateHorizontalList(Title:string, Properties: {Posi
         HorizontalList.Position = Properties.Position
     end
 
+    self.Objects[string.lower(Title)] = HorizontalList
     ApplyStyle(self, HorizontalList)
     HorizontalList.Parent = ParentReference
     return {List = HorizontalList, Index = HorizontalList.LayoutOrder}
@@ -393,6 +400,7 @@ function RuGuiCreateContext:CreateButton(Title:string, Properties: {Position:UDi
     Button:SetAttribute("Type", _type)
     Button:SetAttribute("Style", Properties.StyleID)
 
+    self.Objects[string.lower(Title)] = Button
     ApplyStyle(self, Button)
     Button.Parent = ParentReference
     return {Button = Button, Index = Button.LayoutOrder}
@@ -412,7 +420,7 @@ end
 
 --#endregion
 
-function RuGuiCreateContext:Terminate()
+function RuGuiCreateContext:Terminate() 
     -->> Any clean up may needed should be added here
 end
 
