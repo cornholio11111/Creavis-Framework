@@ -30,14 +30,29 @@ function CreavisEngine.Initialize()
     local self = setmetatable({}, CreavisEngine)
     if RunService:IsClient() then self.AuthoritySide = "client"
     elseif RunService:IsServer() then self.AuthoritySide = "server" end
- 
-    require(script.Engine.Dependencies.RuGuiAdaptor).LoadModuleUI('Studio', game.Players.LocalPlayer.PlayerGui, {})
+
+    self.studioToggled = false
 
     return self
 end
 
-function CreavisEngine:LoadEngineDependencies()
-    
+function CreavisEngine:LoadEngineDependencies(Reloading:boolean?) -- << I like to load these
+    Reloading = Reloading or #self.Dependencies.Engine > 0
+
+    if Reloading then
+        table.clear(self.Dependencies.Engine)
+    end
+
+    for __index, Object in pairs(script.Engine.Dependencies:GetChildren()) do
+        local requiredObject = require(Object)
+        self.Dependencies.Engine[Object.Name] = requiredObject
+    end
+end
+
+function CreavisEngine:ToggleStudio(Boolean:boolean)
+    Boolean = Boolean or not self.Dependencies.Engine.RuGuiAdaptor
+
+    local StudioData = self.Dependencies.Engine.RuGuiAdaptor.LoadModuleUI('Studio', game.Players.LocalPlayer.PlayerGui, {Title = 'Studio'})
 end
 
 function CreavisEngine:LoadModDependencies(Modpack:ModuleScript)

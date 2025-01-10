@@ -93,31 +93,41 @@ end
 
 -- // local functionality
 
-local function IsNearDock(widget, dock, distance)
-    local widgetPosition = widget.AbsolutePosition
-    local widgetSize = widget.AbsoluteSize
-    local widgetBounds = {
-        XMin = widgetPosition.X,
-        XMax = widgetPosition.X + widgetSize.X,
-        YMin = widgetPosition.Y,
-        YMax = widgetPosition.Y + widgetSize.Y
-    }
-    
-    local dockPosition = dock.AbsolutePosition
-    local dockSize = dock.AbsoluteSize
-    local dockBounds = {
-        XMin = dockPosition.X,
-        XMax = dockPosition.X + dockSize.X,
-        YMin = dockPosition.Y,
-        YMax = dockPosition.Y + dockSize.Y
-    }
-    
-    local isNearX = (widgetBounds.XMax + distance > dockBounds.XMin and widgetBounds.XMin - distance < dockBounds.XMax)
-    local isNearY = (widgetBounds.YMax + distance > dockBounds.YMin and widgetBounds.YMin - distance < dockBounds.YMax)
+local function IsNearDock(widget, dock, maxThreshold)
+    local widgetPosition = widget.Position
 
-    return isNearX or isNearY
+    local widgetX, widgetY = widgetPosition.X.Offset, widgetPosition.Y.Offset
+    local dockX, dockY = dock.Position.X.Offset, dock.Position.Y.Offset
+    local dockWidth, dockHeight = dock.Size.X.Offset, dock.Size.Y.Offset
+
+    -- Check proximity
+    local nearLeft = math.abs(widgetX - dockX) < maxThreshold
+    local nearRight = math.abs((widgetX + widget.Width) - (dockX + dockWidth)) < maxThreshold
+    local nearTop = math.abs(widgetY - dockY) < maxThreshold
+    local nearBottom = math.abs((widgetY + widget.Height) - (dockY + dockHeight)) < maxThreshold
+
+    return nearLeft or nearRight or nearTop or nearBottom
 end
 
+local function SnapToDock(widget, dock) -- TOOK
+    widget.Position = dock.Position
+    widget.Size = dock.Size
+end
+
+local function UpdateWidgetForDockResize(widget, dock) -- << TOOK
+    widget.Position = UDim2.new(
+        (widget.Position.X.Offset - dock.Position.X.Offset) / dock.Size.X.Offset,
+        0,
+        (widget.Position.Y.Offset - dock.Position.Y.Offset) / dock.Size.Y.Offset,
+        0
+    )
+    widget.Size = UDim2.new(
+        widget.Size.X.Offset / dock.Size.X.Offset,
+        0,
+        widget.Size.Y.Offset / dock.Size.Y.Offset,
+        0
+    )
+end
 
 --#endregion
 
@@ -156,7 +166,6 @@ end
 -- // Widgets are draggable its a cool system
 function RuGuiCreateContext:CreateWidget(Title:string, Properties:{Position:UDim2, Size:UDim2, StyleID:string?}, DockAt:string?)
     DockAt = DockAt or "None"
-    print(Title, Properties)
     Properties.StyleID = Properties.StyleID or "None"
 
     local Widget = Instance.new("Frame", self.RuGuiData.WindowBaseFrame.Widgets)
@@ -293,11 +302,45 @@ function RuGuiCreateContext:CreateFrame(Title, Properties:{ParentWidget:string, 
     return {Frame = Frame, Index = Frame.LayoutOrder}
 end
 
-function RuGuiCreateContext:CreateScrollMenu()
+function RuGuiCreateContext:CreateScrollMenu(Title:string, Properties:{UseListLayout:boolean?, UseGridLayout:boolean?, LayoutPadding:UDim2?, SortOrder:Enum.SortOrder?, Position:UDim2, Size:UDim2}, ParentID:string)
+    ParentID = ParentID or "None"
+    Properties.StyleID = Properties.StyleID or "None"
 
+    if Properties.UseGridLayout or Properties.UseListLayout then
+        Properties.UIPadding = Properties.UIPadding or UDim.new(.25, 0)
+        Properties.CellPadding = Properties.CellPadding or UDim2.new(.25, 0, .25, 0)
+    end
+
+    if ParentID == "None" then
+        error("Widget Parent ID wasn't passed")
+    elseif not self.Objects[string.lower(ParentID)] then
+        print(self.Objects)
+        error(ParentID.." Not Found in self.Objects in Rugui!")
+    end
+
+    local ParentReference = self.Objects[string.lower(ParentID)]
+
+    local ScrollingFrame = Instance.new("ScrollingFrame", ParentReference)
+    ScrollingFrame.Name = Title
+    ScrollingFrame.LayoutOrder = #ParentReference:GetChildren() + 1
+    ScrollingFrame.AnchorPoint = Vector2.new(.5, .5)
+    ScrollingFrame:SetAttribute("Type", "ScrollFrame")
+    ScrollingFrame:SetAttribute("Style", "ScrollFrame")
+    
+    if Properties.UseListLayout then
+        local ListLayout = Instance.new("UIListLayout", ScrollingFrame)
+        ListLayout.Padding = Properties.LayoutPadding
+        ListLayout.SortOrder = Properties.SortOrder or Enum.SortOrder.LayoutOrder
+    elseif Properties.UseGridLayout then
+        local GridLayout = Instance.new("UIGridLayout", ScrollingFrame)
+        GridLayout.CellPadding = Properties.LayoutPadding
+        GridLayout.SortOrder = Properties.SortOrder or Enum.SortOrder.LayoutOrder
+    end
+
+    return {Menu = ScrollingFrame, Index = ScrollingFrame.LayoutOrder}
 end
 
-function RuGuiCreateContext:CreateMenu(Title:string, Properties:{UseListLayout:boolean?, UIPadding:UDim?, CellPadding:UDim2?, SortOrder:Enum.SortOrder, Position:UDim2, Size:UDim2}, WidgetID:string)
+function RuGuiCreateContext:CreateMenu(Title:string, Properties:{UseListLayout:boolean?, UIPadding:UDim?, CellPadding:UDim2?, SortOrder:Enum.SortOrder?, Position:UDim2, Size:UDim2}, WidgetID:string)
     WidgetID = WidgetID or "None"
     Properties.StyleID = Properties.StyleID or "None"
     Properties.UIPadding = Properties.UIPadding or UDim.new(.25, 0)
@@ -396,7 +439,8 @@ function RuGuiCreateContext:CreateButton(Title:string, Properties: {Position:UDi
     Button.LayoutOrder = #ParentReference:GetChildren() + 1
     Button.AnchorPoint = Vector2.new(.5, .5)
     Button.Size = Properties.Size or UDim2.fromScale(.2, .2)
-
+    Button.Position = Properties.Position
+    
     Button:SetAttribute("Type", _type)
     Button:SetAttribute("Style", Properties.StyleID)
 
@@ -406,16 +450,48 @@ function RuGuiCreateContext:CreateButton(Title:string, Properties: {Position:UDi
     return {Button = Button, Index = Button.LayoutOrder}
 end
 
-function RuGuiCreateContext:CreateToggle(Title:string, Properties: {Position:UDim2, Size:UDim2, Disabled:boolean?, Toggled:boolean?, Image:string?}, ParentReference:UIBase)
+function RuGuiCreateContext:CreateLabel(Title: string, Properties: { Position: UDim2, Size: UDim2, Text: string?, IsImage: boolean?, Image: string?, Editable: boolean? }, ParentReference: UIBase)
+    if not ParentReference then
+        error("Parent reference is required to create a label.")
+    end
 
-end
+    local Label
+    if Properties.IsImage then
+        Label = Instance.new("ImageLabel", ParentReference)
+        Label.Image = Properties.Image or ""
+        Label.ScaleType = Enum.ScaleType.Fit
+        Label.BackgroundTransparency = 1
+    elseif Properties.Editable then
+        Label = Instance.new("TextBox", ParentReference)
+        Label.Text = Properties.Text or ""
+        Label.ClearTextOnFocus = false
+        Label.TextEditable = true
+    else
+        Label = Instance.new("TextLabel", ParentReference)
+        Label.Text = Properties.Text or ""
+    end
 
-function RuGuiCreateContext:CreateTextbox(Title:string, Properties: {Position:UDim2, Size:UDim2, Text:string?, MultiLine:boolean?}, ParentReference:UIBase)
+    Label.Name = Title
+    Label.Position = Properties.Position
+    Label.Size = Properties.Size
+    Label.LayoutOrder = #ParentReference:GetChildren() + 1
+    Label.AnchorPoint = Vector2.new(0.5, 0.5)
+    Label.TextScaled = true
+    Label.Font = Enum.Font.SourceSans
+    Label.TextColor3 = Color3.new(1, 1, 1)
+    Label.BackgroundColor3 = Color3.new(0, 0, 0)
+    Label.BackgroundTransparency = 0.5
 
-end
+    if Properties.IsImage then
+        Label.SizeConstraint = Enum.SizeConstraint.RelativeXY
+    elseif Properties.Editable then
+        Label.PlaceholderText = "Enter text here..."
+        Label.TextWrapped = true
+    else
+        Label.TextWrapped = true
+    end
 
-function RuGuiCreateContext:CreateLabel(Title:string, Properties: {Position:UDim2, Size:UDim2, Text:string?, IsImage:boolean?, Image:string?}, ParentReference:UIBase)
-
+    return {Label = Label, Index = Label.LayoutOrder}
 end
 
 --#endregion

@@ -4,10 +4,10 @@ local RuGui = require(script.Parent.RuGui)
 local RuGuiAdaptor = {}
 RuGuiAdaptor.__index = RuGuiAdaptor
 
-local Objects = {}
+RuGuiAdaptor.LoadedModules = {}
 
-function CreatePacket(Context, ObjectData)
-    local Parent = nil
+function DetectType(Context, ObjectData) -- << Extra Code for depending object types
+    local returnedData = {}
 
     if ObjectData.Type == "Widget" then
         
@@ -24,6 +24,15 @@ function CreatePacket(Context, ObjectData)
     if ObjectData.Type == "Menu" then
         
     end
+
+    return returnedData
+end
+
+function CreatePacket(Context, ObjectData)
+    local Parent = nil
+
+    -- local returnedTypeData = DetectType(Context, ObjectData)
+    -- << Prob will add back in for more in-depth customizations ig
 
     if ObjectData.Dock then
         Parent = ObjectData.Dock
@@ -42,6 +51,17 @@ function CreatePacket(Context, ObjectData)
             print("Warning: Parent not found for " .. ObjectData.Name)
         end
     end
+
+    -- if ObjectData.Folder then
+    --     local WindowScreenGui = Context.RuGuiData.WindowScreenGui
+    --     local Par = WindowScreenGui:FindFirstChild(ObjectData.Folder)
+
+    --     if Par then
+    --         Parent = Par
+    --     else
+    --         print("Warning: Folder not found for " .. ObjectData.Folder)
+    --     end
+    -- end
 
     return {ObjectData.Name, ObjectData.Properties, Parent}
 end
@@ -67,17 +87,46 @@ function RuGuiAdaptor.LoadModuleUI(ModuleReference: ModuleScript | string, Paren
         NewWindow:CreateContext()
         Context = NewWindow.Context
 
-        for objIndex, ObjectData in pairs(RequiredModule) do
-            local Packet = CreatePacket(Context, ObjectData)
+        NewWindow.WindowScreenGui.Parent = Parent
 
-            local Ref = Context["Create" .. ObjectData.Type](Context, table.unpack(Packet))
-            Objects[ObjectData.Name] = Ref
+        local function ConnectFunctionality(ObjectContext, ObjectData)
+            local functionalityExist = RequiredModule.Functionality[ObjectData.Name]
+
+            if functionalityExist then
+                for index, _function in pairs(functionalityExist) do
+                    _function(ObjectContext[ObjectData.Type])
+                end
+            end
         end
 
-        NewWindow.WindowScreenGui.Parent = Parent
+        for objIndex, ObjectData in pairs(RequiredModule) do
+            if ObjectData.Type == "Functionality" then
+                continue
+            end
+
+            local Packet = CreatePacket(Context, ObjectData)
+
+            pcall(function()
+                local ObjectContext = Context["Create" .. ObjectData.Type](Context, table.unpack(Packet))
+                ConnectFunctionality(ObjectContext, ObjectData)
+            end)
+        end
+
+        --NewWindow.WindowScreenGui.Parent = Parent
     else
         error("Required module is empty or invalid.")
     end
+
+    local Data = {
+        Window = NewWindow;
+        Context = Context;
+
+        Module = RequiredModule
+    }
+
+    RuGuiAdaptor.LoadedModules[Configuration.Title] = Data
+
+    return Data
 end
 
 return RuGuiAdaptor

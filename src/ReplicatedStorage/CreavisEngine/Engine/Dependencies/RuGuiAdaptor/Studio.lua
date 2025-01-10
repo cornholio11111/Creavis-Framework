@@ -1,4 +1,20 @@
+local function Register_TestButton_MouseButton1Click(ButtonReference)
+    ButtonReference.MouseButton1Click:Connect(function()
+        print("Thats fire bro wtf")
+    end)
+end
+
+local Functionality = { Type = "Functionality";
+    TestButton = { -- // Can seperate in their single functions or all in one your choice
+        MouseButton1Click = Register_TestButton_MouseButton1Click,
+    };
+
+
+}
+-- << Design & Return of functionality
 return {
+    Functionality = Functionality;
+
     -- Dock Frames
     [1] = {
         Type = "DockFrame",
@@ -6,7 +22,8 @@ return {
         Properties = {
             Position = UDim2.new(0.5, 0, 0.05, 0),
             Size = UDim2.new(1, 0, 0.1, 0)
-        }
+        },
+        Folder = "Docks"
     },
 
     [2] = {
@@ -15,7 +32,8 @@ return {
         Properties = {
             Position = UDim2.new(0.1, 0, 0.5, 0),
             Size = UDim2.new(0.2, 0, 0.8, 0)
-        }
+        },
+        Folder = "Docks"
     },
 
     [3] = {
@@ -24,7 +42,8 @@ return {
         Properties = {
             Position = UDim2.new(0.9, 0, 0.5, 0),
             Size = UDim2.new(0.2, 0, 0.8, 0)
-        }
+        },
+        Folder = "Docks"
     },
 
     [4] = {
@@ -33,7 +52,8 @@ return {
         Properties = {
             Position = UDim2.new(0.5, 0, 0.9, 0),
             Size = UDim2.new(1, 0, 0.2, 0)
-        }
+        },
+        Folder = "Docks"
     },
 
     -- // Widgets
@@ -76,26 +96,26 @@ return {
             Size = UDim2.new(1, 0, 1, 0),
             UIPadding = UDim.new(.1, 0)
         },
-        Parent = "ExplorerWidget"
+        Parent = "ExplorerPanel"
     },
 
     -- Toolbar Items
     [9] = {
         Type = "Button",
-        Name = "File",
+        Name = "TBFile",
         Properties = {
             Text = "File",
-            Size = UDim2.new(0.1, 0, 1, 0),
-            Position = UDim2.new(0, 0, 0, 0)
+            Size = UDim2.new(.1, 0, 1, 0),
+            Position = UDim2.new(0.051, 0, 0.52, 0)
         },
         Parent = "TopToolbar"
     },
 
     [10] = {
         Type = "Button",
-        Name = "InstanceButton",
+        Name = "TestButton",
         Properties = {
-            Text = "Button",
+            Text = "DONT CLICK ME!",
             Size = UDim2.fromScale(1, .1),
             Position = UDim2.fromScale(.8, 0)
         },
