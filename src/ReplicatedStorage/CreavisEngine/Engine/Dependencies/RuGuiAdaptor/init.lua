@@ -109,7 +109,10 @@ function RuGuiAdaptor.LoadModuleUI(ModuleReference: ModuleScript | string, Paren
             pcall(function()
                 local ObjectContext = Context["Create" .. ObjectData.Type](Context, table.unpack(Packet))
                 ConnectFunctionality(ObjectContext, ObjectData)
+            end, function(err)
+                warn("Error creating object of type " .. ObjectData.Type .. ": " .. tostring(err))
             end)
+            
         end
 
         --NewWindow.WindowScreenGui.Parent = Parent
