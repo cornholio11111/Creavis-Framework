@@ -1,7 +1,7 @@
 local RunService = game:GetService("RunService")
 
 local CreavisEngine = {
-    VERSION = "v0.0.1";
+    VERSION = "v0.0.2";
 
     State = { -- >> Where booleans & enums are placed
         Studio = {
@@ -31,8 +31,6 @@ function CreavisEngine.Initialize()
     if RunService:IsClient() then self.AuthoritySide = "client"
     elseif RunService:IsServer() then self.AuthoritySide = "server" end
 
-    self.studioToggled = false
-
     return self
 end
 
@@ -53,10 +51,6 @@ function CreavisEngine:ToggleStudio(Boolean:boolean)
     Boolean = Boolean or not self.Dependencies.Engine.RuGuiAdaptor
 
     local StudioData = self.Dependencies.Engine.RuGuiAdaptor.LoadModuleUI('Studio', game.Players.LocalPlayer.PlayerGui, {Title = 'Studio'})
-end
-
-function CreavisEngine:LoadModDependencies(Modpack:ModuleScript)
-    
 end
 
 -- // Backend Engine
