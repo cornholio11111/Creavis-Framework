@@ -11,7 +11,6 @@ local CreavisEngine = {
 
 
     };
-    
 
     Mods = {}; -- >> Enabled mods are added into this array
     -- Mod Example: {Title:string, ModData:{}, Dependencies:{}}
@@ -51,6 +50,8 @@ function CreavisEngine:ToggleStudio(Boolean:boolean)
     Boolean = Boolean or not self.Dependencies.Engine.RuGuiAdaptor
 
     local StudioData = self.Dependencies.Engine.RuGuiAdaptor.LoadModuleUI('Studio', game.Players.LocalPlayer.PlayerGui, {Title = 'Studio'})
+
+    return StudioData
 end
 
 -- // Backend Engine

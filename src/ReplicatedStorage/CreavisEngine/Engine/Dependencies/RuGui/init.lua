@@ -53,7 +53,16 @@ local function ApplyStyle(Context, Object)
 end
 
 function RuGuiCreateContext:SetStyleSheet(StyleSheetData:{})
+    if typeof(StyleSheetData) == "Instance" then
+        if StyleSheetData:IsA("Module") then
+            StyleSheetData = require(StyleSheetData)
+        end
+    end
+
     self.StyleSheet = StyleSheetData
+
+    print("WOW THIS CALLED")
+    print(StyleSheetData)
 
     for __index, Data in ipairs(self.Docks) do
         ApplyStyle(self, Data.Dock)

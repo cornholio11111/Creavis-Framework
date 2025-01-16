@@ -3,7 +3,8 @@
 return {
     -- // core shiz
     dock = {
-        BackgroundTransparency = 1;
+        BackgroundTransparency = 0;
+        BorderSizePixel = 0;
     },
 
     -- // Widgets

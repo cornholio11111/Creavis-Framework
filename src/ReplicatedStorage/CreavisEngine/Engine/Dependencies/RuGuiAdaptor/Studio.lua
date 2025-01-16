@@ -9,114 +9,140 @@ local Functionality = { Type = "Functionality";
         MouseButton1Click = Register_TestButton_MouseButton1Click,
     };
 }
--- << Design & Return of functionality
+
 return {
-    Functionality = Functionality;
+    Functionality = Functionality,
 
     -- Dock Frames
-    [1] = {
-        Type = "DockFrame",
-        Name = "TopToolbar",
-        Properties = {
-            Position = UDim2.new(0.5, 0, 0.05, 0),
-            Size = UDim2.new(1, 0, 0.1, 0)
+    Docks = {
+        Toolbar = {
+            Type = "DockFrame",
+            Name = "Toolbar",
+            Properties = {
+                Position = UDim2.new(0.5, 0, 0.05, 0),
+                Size = UDim2.new(1, 0, 0.1, 0),
+                BackgroundColor3 = Color3.fromRGB(200, 200, 200),
+            },
         },
-        Folder = "Docks"
+
+        LeftDock = {
+            Type = "DockFrame",
+            Name = "LeftDock",
+            Properties = {
+                Position = UDim2.new(0.1, 0, 0.45, 0),
+                Size = UDim2.new(0.2, 0, 0.7, 0),
+                BackgroundColor3 = Color3.fromRGB(240, 240, 240),
+            },
+        },
+
+        RightDock = {
+            Type = "DockFrame",
+            Name = "RightDock",
+            Properties = {
+                Position = UDim2.new(0.9, 0, 0.45, 0),
+                Size = UDim2.new(0.2, 0, 0.7, 0),
+                BackgroundColor3 = Color3.fromRGB(240, 240, 240),
+            },
+        },
+
+        MainDock = {
+            Type = "DockFrame",
+            Name = "BottomDock",
+            Properties = {
+                Position = UDim2.new(0.5, 0, 0.9, 0),
+                Size = UDim2.new(1, 0, 0.2, 0),
+                BackgroundColor3 = Color3.fromRGB(200, 200, 200),
+            },
+        },
     },
 
-    [2] = {
-        Type = "DockFrame",
-        Name = "LeftDock",
-        Properties = {
-            Position = UDim2.new(0.1, 0, 0.5, 0),
-            Size = UDim2.new(0.2, 0, 0.8, 0)
+    -- Panels and Widgets
+    Panels = {
+        Toolbox = {
+            Type = "Widget",
+            Name = "Toolbox",
+            Properties = {
+                Position = UDim2.new(0.9, 0, 0.5, 0),
+                Size = UDim2.new(0.2, 0, 0.8, 0),
+
+                BackgroundColor3 = Color3.fromRGB(240, 240, 240),
+                Scrollable = true,
+            },
+            Dock = "LeftDock",
         },
-        Folder = "Docks"
+
+        ExplorerPanel = {
+            Type = "Widget",
+            Name = "ExplorerPanel",
+            Properties = {
+                Position = UDim2.new(0, 0, 0, 0),
+                Size = UDim2.new(1, 0, 0.5, 0),
+                BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+                Scrollable = true,
+            },
+            Dock = "RightDock",
+        },
+
+        PropertiesPanel = {
+            Type = "Widget",
+            Name = "Widget_PropertiesPanel",
+            Properties = {
+                Position = UDim2.new(0, 0, 0.5, 0),
+                Size = UDim2.new(1, 0, 0.5, 0),
+                BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+                Scrollable = true,
+            },
+            Dock = "RightDock",
+        },
+
+        OutputPanel = {
+            Type = "Widget",
+            Name = "OutputPanel",
+            Properties = {
+                Position = UDim2.new(0.5, 0, 0.9, 0),
+                Size = UDim2.new(1, 0, 0.2, 0)
+            },
+            Dock = "BottomDock"
+        },
     },
 
-    [3] = {
-        Type = "DockFrame",
-        Name = "RightDock",
-        Properties = {
-            Position = UDim2.new(0.9, 0, 0.5, 0),
-            Size = UDim2.new(0.2, 0, 0.8, 0)
+    -- Toolbar Buttons
+    Toolbar = {
+        FileButton = {
+            Type = "Button",
+            Name = "Button_File",
+            Properties = {
+                Position = UDim2.new(0, 10, 0, 10),
+                Size = UDim2.new(0.1, 0, 1, -20),
+                Text = "File",
+                BackgroundColor3 = Color3.fromRGB(180, 180, 180),
+                TextColor3 = Color3.fromRGB(0, 0, 0),
+            },
+            Parent = "DockFrame_TopToolbar",
         },
-        Folder = "Docks"
+        EditButton = {
+            Type = "Button",
+            Name = "Button_Edit",
+            Properties = {
+                Position = UDim2.new(0.1, 10, 0, 10),
+                Size = UDim2.new(0.1, 0, 1, -20),
+                Text = "Edit",
+                BackgroundColor3 = Color3.fromRGB(180, 180, 180),
+                TextColor3 = Color3.fromRGB(0, 0, 0),
+            },
+            Parent = "DockFrame_TopToolbar",
+        },
+        ViewButton = {
+            Type = "Button",
+            Name = "Button_View",
+            Properties = {
+                Position = UDim2.new(0.2, 10, 0, 10),
+                Size = UDim2.new(0.1, 0, 1, -20),
+                Text = "View",
+                BackgroundColor3 = Color3.fromRGB(180, 180, 180),
+                TextColor3 = Color3.fromRGB(0, 0, 0),
+            },
+            Parent = "DockFrame_TopToolbar",
+        },
     },
-
-    [4] = {
-        Type = "DockFrame",
-        Name = "BottomDock",
-        Properties = {
-            Position = UDim2.new(0.5, 0, 0.9, 0),
-            Size = UDim2.new(1, 0, 0.2, 0)
-        },
-        Folder = "Docks"
-    },
-
-    -- // Widgets
-    [5] = {
-        Type = "Widget",
-        Name = "ToolboxPanel",
-        Properties = {
-            Position = UDim2.new(0.9, 0, 0.5, 0),
-            Size = UDim2.new(0.2, 0, 0.8, 0)
-        },
-        Dock = "RightDock"
-    },
-
-    [6] = {
-        Type = "Widget",
-        Name = "OutputPanel",
-        Properties = {
-            Position = UDim2.new(0.5, 0, 0.9, 0),
-            Size = UDim2.new(1, 0, 0.2, 0)
-        },
-        Dock = "BottomDock"
-    },
-
-    [7] = {
-        Type = "Widget",
-        Name = "ExplorerPanel",
-        Properties = {
-            Position = UDim2.new(0.1, 0, 0.5, 0),
-            Size = UDim2.new(0.2, 0, 0.8, 0)
-        },
-        Dock = "LeftDock"
-    },
-
-    -- // other shiz
-    [8] = {
-        Type = "HorizontalList",
-        Name = "ExplorerList",
-        Properties = {
-            Position = UDim2.new(0.5, 0, 0.5, 0),
-            Size = UDim2.new(1, 0, 1, 0),
-            UIPadding = UDim.new(.1, 0)
-        },
-        Parent = "ExplorerPanel"
-    },
-
-    -- Toolbar Items
-    [9] = {
-        Type = "Button",
-        Name = "TBFile",
-        Properties = {
-            Text = "File",
-            Size = UDim2.new(.1, 0, 1, 0),
-            Position = UDim2.new(0.051, 0, 0.52, 0)
-        },
-        Parent = "TopToolbar"
-    },
-
-    [10] = {
-        Type = "Button",
-        Name = "TestButton",
-        Properties = {
-            Text = "DONT CLICK ME!",
-            Size = UDim2.fromScale(1, .1),
-            Position = UDim2.fromScale(.8, 0)
-        },
-        Parent = "ExplorerList"
-    }
 }

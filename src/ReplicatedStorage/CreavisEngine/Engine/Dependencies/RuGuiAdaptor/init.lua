@@ -99,11 +99,11 @@ function RuGuiAdaptor.LoadModuleUI(ModuleReference: ModuleScript | string, Paren
             end
         end
 
-        for objIndex, ObjectData in pairs(RequiredModule) do
-            if ObjectData.Type == "Functionality" then
-                continue
-            end
+        local Toolbar = RequiredModule.Toolbar
+        local Docks = RequiredModule.Docks
+        local Panels = RequiredModule.Panels
 
+        for objIndex, ObjectData in pairs(Docks) do
             local Packet = CreatePacket(Context, ObjectData)
 
             pcall(function()
@@ -112,7 +112,28 @@ function RuGuiAdaptor.LoadModuleUI(ModuleReference: ModuleScript | string, Paren
             end, function(err)
                 warn("Error creating object of type " .. ObjectData.Type .. ": " .. tostring(err))
             end)
-            
+        end
+
+        for objIndex, ObjectData in pairs(Toolbar) do
+            local Packet = CreatePacket(Context, ObjectData)
+
+            pcall(function()
+                local ObjectContext = Context["Create" .. ObjectData.Type](Context, table.unpack(Packet))
+                ConnectFunctionality(ObjectContext, ObjectData)
+            end, function(err)
+                warn("Error creating object of type " .. ObjectData.Type .. ": " .. tostring(err))
+            end)
+        end
+
+        for objIndex, ObjectData in pairs(Panels) do
+            local Packet = CreatePacket(Context, ObjectData)
+
+            pcall(function()
+                local ObjectContext = Context["Create" .. ObjectData.Type](Context, table.unpack(Packet))
+                ConnectFunctionality(ObjectContext, ObjectData)
+            end, function(err)
+                warn("Error creating object of type " .. ObjectData.Type .. ": " .. tostring(err))
+            end)
         end
 
         --NewWindow.WindowScreenGui.Parent = Parent
@@ -130,6 +151,10 @@ function RuGuiAdaptor.LoadModuleUI(ModuleReference: ModuleScript | string, Paren
     RuGuiAdaptor.LoadedModules[Configuration.Title] = Data
 
     return Data
+end
+
+function RuGuiAdaptor.FindModule(Title)
+    return RuGuiAdaptor.LoadedModules[Title] or {}
 end
 
 return RuGuiAdaptor
