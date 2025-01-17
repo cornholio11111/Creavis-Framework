@@ -5,7 +5,7 @@ local ModpackExample = {
 
     TITLE = "Modpack Example";
     SPECIAL_64BIT_ID = ""; -->> This is how we find the modpack data in the DataStoreService:GetDataStore()
-      -- >> 64BIT ID | This is added once its uploaded to the DataStoreService
+      -- >> 64BIT ID | This is added once its uploaded to the DataStoreService, not set by the mod author
 }
 ModpackExample.__index = ModpackExample
 

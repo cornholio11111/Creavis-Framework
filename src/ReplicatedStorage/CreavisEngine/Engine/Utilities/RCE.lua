@@ -1,6 +1,8 @@
+-- << Roblox Custom Encrpytion
+
 local RCE = {}
 
-local encryptionKey = {3, 1, 4, 1, 5, 9, 2, 6} -- << Please Randomize this ID or else ur F**cked with hackers
+local encryptionKey = {95, 402, 50, 22, 3, 45, 0, 1, 18, 07} -- << Please Randomize this ID or else ur F**cked with hackers
 
 function RCE.Encrypt(Input, Brackets: boolean?)
     local encrypted = {}

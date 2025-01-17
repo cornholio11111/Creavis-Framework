@@ -1,10 +1,14 @@
--- // NOTE: All styles names MUST be FULLY lowercase
+-- // NOTE: All styles names MUST be FULLY lowercase, can be snake_case if you wanna or closedcase
 
 return {
     -- // core shiz
     dock = {
-        BackgroundTransparency = 0;
+        BackgroundTransparency = 1;
         BorderSizePixel = 0;
+    },
+
+    toolbaraction = {
+
     },
 
     -- // Widgets
@@ -34,7 +38,7 @@ return {
 
     textbutton = {
         TextColor3 = Color3.new(1, 1, 1),
-        TextFits  = true,
+        TextScaled = true
     },
 
     imagebutton = {

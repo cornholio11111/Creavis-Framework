@@ -85,7 +85,7 @@ return {
 
         PropertiesPanel = {
             Type = "Widget",
-            Name = "Widget_PropertiesPanel",
+            Name = "PropertiesPanel",
             Properties = {
                 Position = UDim2.new(0, 0, 0.5, 0),
                 Size = UDim2.new(1, 0, 0.5, 0),
@@ -95,14 +95,17 @@ return {
             Dock = "RightDock",
         },
 
-        OutputPanel = {
-            Type = "Widget",
-            Name = "OutputPanel",
+        ToolbarPanel = {
+            Type = "List",
+            Name = "ToolbarPanel",
             Properties = {
-                Position = UDim2.new(0.5, 0, 0.9, 0),
-                Size = UDim2.new(1, 0, 0.2, 0)
+                Position = UDim2.new(0.5, 0, 0.5, 0),
+                Size = UDim2.new(1, 0, 1, 0),
+                FillDirection = Enum.FillDirection.Horizontal,
+                Padding = UDim.new(0, 0),
+                AutoAligned = true
             },
-            Dock = "BottomDock"
+            Dock = "Toolbar"
         },
     },
 
@@ -110,39 +113,39 @@ return {
     Toolbar = {
         FileButton = {
             Type = "Button",
-            Name = "Button_File",
+            Name = "File",
             Properties = {
                 Position = UDim2.new(0, 10, 0, 10),
-                Size = UDim2.new(0.1, 0, 1, -20),
+                Size = UDim2.new(0.1, 0, 1, 0),
                 Text = "File",
                 BackgroundColor3 = Color3.fromRGB(180, 180, 180),
                 TextColor3 = Color3.fromRGB(0, 0, 0),
             },
-            Parent = "DockFrame_TopToolbar",
+            Parent = "Toolbar",
         },
         EditButton = {
             Type = "Button",
-            Name = "Button_Edit",
+            Name = "Edit",
             Properties = {
                 Position = UDim2.new(0.1, 10, 0, 10),
-                Size = UDim2.new(0.1, 0, 1, -20),
+                Size = UDim2.new(0.1, 0, 1, 0),
                 Text = "Edit",
                 BackgroundColor3 = Color3.fromRGB(180, 180, 180),
                 TextColor3 = Color3.fromRGB(0, 0, 0),
             },
-            Parent = "DockFrame_TopToolbar",
+            Parent = "Toolbar",
         },
         ViewButton = {
             Type = "Button",
-            Name = "Button_View",
+            Name = "View",
             Properties = {
                 Position = UDim2.new(0.2, 10, 0, 10),
-                Size = UDim2.new(0.1, 0, 1, -20),
+                Size = UDim2.new(0.1, 0, 1, 0),
                 Text = "View",
                 BackgroundColor3 = Color3.fromRGB(180, 180, 180),
                 TextColor3 = Color3.fromRGB(0, 0, 0),
             },
-            Parent = "DockFrame_TopToolbar",
+            Parent = "Toolbar",
         },
     },
 }

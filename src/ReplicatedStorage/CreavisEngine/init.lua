@@ -1,7 +1,7 @@
 local RunService = game:GetService("RunService")
 
 local CreavisEngine = {
-    VERSION = "v0.0.2";
+    VERSION = "v0.0.3";
 
     State = { -- >> Where booleans & enums are placed
         Studio = {
@@ -16,7 +16,8 @@ local CreavisEngine = {
     -- Mod Example: {Title:string, ModData:{}, Dependencies:{}}
 
     Dependencies = {Engine = {}, Mod = {}}; -- >> Packages that are needed for the mods to load
-    -- Dependency Example: {Priority:Enum.ContextActionPriority, Title:string, ModuleData:{}} 
+    -- Registered with one of 3 ids, "Engine", "Editor", "Mod", or "Plugin"
+    -- Dependency Example: {Priority:Enum.ContextActionPriority, Title:string, ModuleData:{}}
     -- maybe also store the mod name or id smth about the mod in the dependency mods
 
     Utilities = {}; -- >> Utilities are premade packages that are used from 3rd party venders, example: knit
@@ -46,12 +47,19 @@ function CreavisEngine:LoadEngineDependencies(Reloading:boolean?) -- << I like t
     end
 end
 
-function CreavisEngine:ToggleStudio(Boolean:boolean)
-    Boolean = Boolean or not self.Dependencies.Engine.RuGuiAdaptor
+function CreavisEngine:LoadTrainer(Trainer:ModuleScript|table?)
+    if not Trainer then
+        warn("Creavis Engine | Loading Default Trainer ('CreavisTrainer')")
+        Trainer = require(script.CreavisTrainer)
+    end
 
-    local StudioData = self.Dependencies.Engine.RuGuiAdaptor.LoadModuleUI('Studio', game.Players.LocalPlayer.PlayerGui, {Title = 'Studio'})
+    
+end
 
-    return StudioData
+function CreavisEngine:LoadUI(Name)
+    local UIData = self.Dependencies.Engine.RuGuiAdaptor.LoadModuleUI(Name, game.Players.LocalPlayer.PlayerGui, {Title = Name})
+
+    return UIData
 end
 
 -- // Backend Engine

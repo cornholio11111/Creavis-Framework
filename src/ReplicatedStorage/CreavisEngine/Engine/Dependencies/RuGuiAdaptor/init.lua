@@ -103,7 +103,7 @@ function RuGuiAdaptor.LoadModuleUI(ModuleReference: ModuleScript | string, Paren
         local Docks = RequiredModule.Docks
         local Panels = RequiredModule.Panels
 
-        for objIndex, ObjectData in pairs(Docks) do
+        local function CreateOBJ(ObjectData)
             local Packet = CreatePacket(Context, ObjectData)
 
             pcall(function()
@@ -112,28 +112,18 @@ function RuGuiAdaptor.LoadModuleUI(ModuleReference: ModuleScript | string, Paren
             end, function(err)
                 warn("Error creating object of type " .. ObjectData.Type .. ": " .. tostring(err))
             end)
+        end
+
+        for objIndex, ObjectData in pairs(Docks) do
+            CreateOBJ(ObjectData)
         end
 
         for objIndex, ObjectData in pairs(Toolbar) do
-            local Packet = CreatePacket(Context, ObjectData)
-
-            pcall(function()
-                local ObjectContext = Context["Create" .. ObjectData.Type](Context, table.unpack(Packet))
-                ConnectFunctionality(ObjectContext, ObjectData)
-            end, function(err)
-                warn("Error creating object of type " .. ObjectData.Type .. ": " .. tostring(err))
-            end)
+            CreateOBJ(ObjectData)
         end
 
         for objIndex, ObjectData in pairs(Panels) do
-            local Packet = CreatePacket(Context, ObjectData)
-
-            pcall(function()
-                local ObjectContext = Context["Create" .. ObjectData.Type](Context, table.unpack(Packet))
-                ConnectFunctionality(ObjectContext, ObjectData)
-            end, function(err)
-                warn("Error creating object of type " .. ObjectData.Type .. ": " .. tostring(err))
-            end)
+            CreateOBJ(ObjectData)
         end
 
         --NewWindow.WindowScreenGui.Parent = Parent

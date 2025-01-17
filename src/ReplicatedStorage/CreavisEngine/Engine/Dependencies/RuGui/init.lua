@@ -61,16 +61,13 @@ function RuGuiCreateContext:SetStyleSheet(StyleSheetData:{})
 
     self.StyleSheet = StyleSheetData
 
-    print("WOW THIS CALLED")
-    print(StyleSheetData)
-
-    for __index, Data in ipairs(self.Docks) do
-        ApplyStyle(self, Data.Dock)
+    for __index, Data in pairs(self.Docks) do
+        ApplyStyle(self, Data)
         task.wait()
     end
 
-    for __index, Data in ipairs(self.Widgets) do
-        ApplyStyle(self, Data.Widget)
+    for __index, Data in pairs(self.Widgets) do
+        ApplyStyle(self, Data)
         task.wait()
     end
 end
@@ -393,7 +390,7 @@ function RuGuiCreateContext:CreateMenu(Title:string, Properties:{UseListLayout:b
     return {Menu = Menu, Index = Menu.LayoutOrder}
 end
 
-function RuGuiCreateContext:CreateHorizontalList(Title:string, Properties: {Position:UDim2?, Size:UDim2?, AutoAligned:boolean?, UIPadding:UDim, StyleID:string?}, ParentReference)
+function RuGuiCreateContext:CreateList(Title:string, Properties: {Position:UDim2?, FillDirection:Enum.FillDirection?, Size:UDim2?, AutoAligned:boolean?, UIPadding:UDim, StyleID:string?}, ParentReference)
     Properties.StyleID = Properties.StyleID or "HorizontalList"
     Properties.UIPadding = Properties.UIPadding or UDim.new(.25, 0)
 
@@ -406,7 +403,7 @@ function RuGuiCreateContext:CreateHorizontalList(Title:string, Properties: {Posi
     HorizontalList:SetAttribute("Style", Properties.StyleID)
 
     local UIListLayout = Instance.new("UIListLayout", HorizontalList)
-    UIListLayout.FillDirection = Enum.FillDirection.Vertical
+    UIListLayout.FillDirection = Properties.FillDirection
     UIListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
     UIListLayout.VerticalAlignment = Enum.VerticalAlignment.Center
     UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
