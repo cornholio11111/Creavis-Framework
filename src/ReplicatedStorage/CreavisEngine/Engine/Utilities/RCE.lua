@@ -10,7 +10,7 @@ function RCE.Encrypt(Input, Brackets: boolean?)
     for i = 1, #Input do
         local char = string.byte(Input, i)
         local keyOffset = encryptionKey[(i - 1) % #encryptionKey + 1]
-        table.insert(encrypted, (char ~ keyOffset))
+        table.insert(encrypted, (char ~= keyOffset))
     end
 
     local hexString = ""
@@ -48,7 +48,7 @@ function RCE.Decrypt(Input)
     local decrypted = {}
     for i, byte in ipairs(bytes) do
         local keyOffset = encryptionKey[(i - 1) % #encryptionKey + 1]
-        table.insert(decrypted, string.char(byte ~ keyOffset))
+        table.insert(decrypted, string.char(byte ~= keyOffset))
     end
 
     local decryptedString = table.concat(decrypted)
