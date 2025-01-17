@@ -1,9 +1,18 @@
+local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 -- // RuGuiCreateContext
 
 --[[
 
     Holds the data on the User Interface
+
+]]--
+
+--[[
+    TODO:
+
+    - add dock stacking of widgets
+    - add toolbar dropdowns
 
 ]]--
 
@@ -54,7 +63,7 @@ end
 
 function RuGuiCreateContext:SetStyleSheet(StyleSheetData:{})
     if typeof(StyleSheetData) == "Instance" then
-        if StyleSheetData:IsA("Module") then
+        if StyleSheetData:IsA("ModuleScript") then
             StyleSheetData = require(StyleSheetData)
         end
     end
@@ -80,73 +89,35 @@ function RuGuiCreateContext:DockWidget(Widget:string, Dock:string)
     
     if WidgetReference then
         if DockReference then
-
             -- DOCK THE FRAME!!
-
             WidgetReference.Position = DockReference.Position
             WidgetReference.Size = DockReference.Size
-
             ApplyStyle(self, WidgetReference)
         else
-            print(self.Docks)
-            error(Dock.." can't be found in self.Widgets!")
+            error(Dock.." can't be found in self.Docks!")
         end
     else
-        print(self.Widgets)
         error(Widget.." can't be found in self.Widgets!")
     end
 end
 
+
 -- // local functionality
 
-local function IsNearDock(widget, dock, maxThreshold)
-    local widgetPosition = widget.Position
+local function IsNearDock(dock, margin)
+    local Mouse = Players.LocalPlayer:GetMouse()
+    local Frame = dock
 
-    local widgetX, widgetY = widgetPosition.X.Offset, widgetPosition.Y.Offset
-    local dockX, dockY = dock.Position.X.Offset, dock.Position.Y.Offset
-    local dockWidth, dockHeight = dock.Size.X.Offset, dock.Size.Y.Offset
-
-    -- Check proximity
-    local nearLeft = math.abs(widgetX - dockX) < maxThreshold
-    local nearRight = math.abs((widgetX + widget.Width) - (dockX + dockWidth)) < maxThreshold
-    local nearTop = math.abs(widgetY - dockY) < maxThreshold
-    local nearBottom = math.abs((widgetY + widget.Height) - (dockY + dockHeight)) < maxThreshold
-
-    return nearLeft or nearRight or nearTop or nearBottom
+    return Mouse.X > Frame.AbsolutePosition.X and Mouse.X < Frame.AbsolutePosition.X + Frame.AbsoluteSize.X and Mouse.Y > Frame.AbsolutePosition.Y and Mouse.Y < Frame.AbsolutePosition.Y + Frame.AbsoluteSize.Y
 end
 
-local function SnapToDock(widget, dock) -- TOOK
-    widget.Position = dock.Position
-    widget.Size = dock.Size
-end
-
-local function UpdateWidgetForDockResize(widget, dock) -- << TOOK
-    widget.Position = UDim2.new(
-        (widget.Position.X.Offset - dock.Position.X.Offset) / dock.Size.X.Offset,
-        0,
-        (widget.Position.Y.Offset - dock.Position.Y.Offset) / dock.Size.Y.Offset,
-        0
-    )
-    widget.Size = UDim2.new(
-        widget.Size.X.Offset / dock.Size.X.Offset,
-        0,
-        widget.Size.Y.Offset / dock.Size.Y.Offset,
-        0
-    )
-end
 
 --#endregion
 
 --#region User Interface Creation
 
 -- // Creating User Interface
-function RuGuiCreateContext:CreateDockFrame(Title:string, Properties:{Position:UDim2, Size:UDim2})
-    -- WindowScreenGui = self.WindowScreenGui,
-    -- Width = self.Width,
-    -- Height = self.Height,
-    -- Title = self.Title,
-    -- WindowBaseFrame= self.WindowBaseFrame
-
+function RuGuiCreateContext:CreateDockFrame(Title:string, Properties:{Position:UDim2, Size:UDim2, Dockable:boolean?})
     local Dock = Instance.new("Frame", self.RuGuiData.WindowBaseFrame.Docks)
     Dock.Name = Title
     Dock.LayoutOrder = #self.Docks + 1
@@ -157,7 +128,7 @@ function RuGuiCreateContext:CreateDockFrame(Title:string, Properties:{Position:U
     Dock.Position = Properties.Position
     Dock.Size = Properties.Size
 
-    Dock:SetAttribute("Dockable", true) -- << If something can dock to this DockFrame
+    Dock:SetAttribute("Dockable", Properties.Dockable) -- << If something can dock to this DockFrame
     Dock:SetAttribute("Type", "Dock")
 
     Dock:SetAttribute("Style", "Dock")
@@ -212,29 +183,45 @@ function RuGuiCreateContext:CreateWidget(Title:string, Properties:{Position:UDim
         widget.ZIndex = 100
     end
 
-    self.Connections["DragRenderStepped"] = RunService:BindToRenderStep("DragRenderStepped", 0, function()
-        if IsDragging then
-            for _, dock in ipairs(self.Docks) do
-                if IsNearDock(Widget, dock, 30) then
-                    wannaDock = dock.Name
-                end
-            end
-        end
-    end)
-
     DragDetector.DragStart:Connect(function()
         IsDragging = true
         CanEditDragDetector = false
         BringToFront(Widget)
         self.CurrentDraggedWidget = Title
+
+        if not self.Connections["DragRenderStepped"..Title] then
+            self.Connections["DragRenderStepped"..Title] = RunService:BindToRenderStep("DragRenderStepped"..Title, 0, function()
+                if IsDragging then
+                    for _, dock in pairs(self.Docks) do
+                        if dock:GetAttribute("Dockable") and IsNearDock(dock, 15) then
+                            wannaDock = dock
+
+                            dock.BackgroundColor3 = Color3.fromRGB(0, 0, 225)
+                            dock.BackgroundTransparency = .5
+
+                        else
+                            if wannaDock == dock then
+                                wannaDock = nil
+                            end
+                            ApplyStyle(self, dock)
+                        end
+
+                        task.wait()
+                    end
+                end
+            end)
+        end
     end)
 
     DragDetector.DragEnd:Connect(function()
         IsDragging = false
         CanEditDragDetector = true
 
+        RunService:UnbindFromRenderStep("DragRenderStepped"..Title)
+
         if wannaDock ~= nil then
-            self:DockWidget(Title, wannaDock)
+            ApplyStyle(self, wannaDock)
+            self:DockWidget(Title, wannaDock.Name)
         end
 
         self.LastDraggedWidget = Title

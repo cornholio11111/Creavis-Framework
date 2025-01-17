@@ -10,6 +10,16 @@ local Functionality = { Type = "Functionality";
     };
 }
 
+--[[
+
+    TODO:
+    
+    - add output panel
+    - add explorer
+    - add properties panel
+    - add movement tools
+]]
+
 return {
     Functionality = Functionality,
 
@@ -22,6 +32,7 @@ return {
                 Position = UDim2.new(0.5, 0, 0.05, 0),
                 Size = UDim2.new(1, 0, 0.1, 0),
                 BackgroundColor3 = Color3.fromRGB(200, 200, 200),
+                Dockable = false
             },
         },
 
@@ -32,6 +43,7 @@ return {
                 Position = UDim2.new(0.1, 0, 0.45, 0),
                 Size = UDim2.new(0.2, 0, 0.7, 0),
                 BackgroundColor3 = Color3.fromRGB(240, 240, 240),
+                Dockable = true
             },
         },
 
@@ -42,34 +54,36 @@ return {
                 Position = UDim2.new(0.9, 0, 0.45, 0),
                 Size = UDim2.new(0.2, 0, 0.7, 0),
                 BackgroundColor3 = Color3.fromRGB(240, 240, 240),
+                Dockable = true
             },
         },
 
-        MainDock = {
+        BottomDock = {
             Type = "DockFrame",
             Name = "BottomDock",
             Properties = {
                 Position = UDim2.new(0.5, 0, 0.9, 0),
                 Size = UDim2.new(1, 0, 0.2, 0),
                 BackgroundColor3 = Color3.fromRGB(200, 200, 200),
+                Dockable = true
             },
         },
     },
 
     -- Panels and Widgets
     Panels = {
-        Toolbox = {
-            Type = "Widget",
-            Name = "Toolbox",
-            Properties = {
-                Position = UDim2.new(0.9, 0, 0.5, 0),
-                Size = UDim2.new(0.2, 0, 0.8, 0),
+        -- Toolbox = {
+        --     Type = "Widget",
+        --     Name = "Toolbox",
+        --     Properties = {
+        --         Position = UDim2.new(0.9, 0, 0.5, 0),
+        --         Size = UDim2.new(0.2, 0, 0.8, 0),
 
-                BackgroundColor3 = Color3.fromRGB(240, 240, 240),
-                Scrollable = true,
-            },
-            Dock = "LeftDock",
-        },
+        --         BackgroundColor3 = Color3.fromRGB(240, 240, 240),
+        --         Scrollable = true,
+        --     },
+        --     Dock = "LeftDock",
+        -- },
 
         ExplorerPanel = {
             Type = "Widget",
@@ -92,7 +106,18 @@ return {
                 BackgroundColor3 = Color3.fromRGB(255, 255, 255),
                 Scrollable = true,
             },
-            Dock = "RightDock",
+            Dock = "LeftDock",
+        },
+
+        OutputPanel = {
+            Type = "Widget",
+            Name = "OutputPanel",
+            Properties = {
+                Position = UDim2.new(0.5, 0, 0.5, 0),
+                Size = UDim2.new(1, 0, 1, 0),
+                Scrollable = true
+            },
+            Dock = "BottomDock"
         },
 
         ToolbarPanel = {
@@ -102,10 +127,9 @@ return {
                 Position = UDim2.new(0.5, 0, 0.5, 0),
                 Size = UDim2.new(1, 0, 1, 0),
                 FillDirection = Enum.FillDirection.Horizontal,
-                Padding = UDim.new(0, 0),
-                AutoAligned = true
+                UIPadding = UDim.new(0, 0),
             },
-            Dock = "Toolbar"
+            Parent = "Toolbar"
         },
     },
 
@@ -121,8 +145,9 @@ return {
                 BackgroundColor3 = Color3.fromRGB(180, 180, 180),
                 TextColor3 = Color3.fromRGB(0, 0, 0),
             },
-            Parent = "Toolbar",
+            Parent = "ToolbarPanel"
         },
+
         EditButton = {
             Type = "Button",
             Name = "Edit",
@@ -133,8 +158,9 @@ return {
                 BackgroundColor3 = Color3.fromRGB(180, 180, 180),
                 TextColor3 = Color3.fromRGB(0, 0, 0),
             },
-            Parent = "Toolbar",
+            Parent = "ToolbarPanel"
         },
+
         ViewButton = {
             Type = "Button",
             Name = "View",
@@ -145,7 +171,7 @@ return {
                 BackgroundColor3 = Color3.fromRGB(180, 180, 180),
                 TextColor3 = Color3.fromRGB(0, 0, 0),
             },
-            Parent = "Toolbar",
+            Parent = "ToolbarPanel"
         },
     },
 }

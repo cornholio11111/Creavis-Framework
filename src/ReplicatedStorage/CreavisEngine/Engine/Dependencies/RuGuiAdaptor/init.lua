@@ -115,15 +115,24 @@ function RuGuiAdaptor.LoadModuleUI(ModuleReference: ModuleScript | string, Paren
         end
 
         for objIndex, ObjectData in pairs(Docks) do
-            CreateOBJ(ObjectData)
-        end
-
-        for objIndex, ObjectData in pairs(Toolbar) do
-            CreateOBJ(ObjectData)
+            pcall(function()
+                CreateOBJ(ObjectData)
+            end, function(err) warn(tostring(err)) end)
+            task.wait()
         end
 
         for objIndex, ObjectData in pairs(Panels) do
-            CreateOBJ(ObjectData)
+            pcall(function()
+                CreateOBJ(ObjectData)
+            end, function(err) warn(tostring(err)) end)
+            task.wait()
+        end
+
+        for objIndex, ObjectData in pairs(Toolbar) do
+            pcall(function()
+                CreateOBJ(ObjectData)
+            end, function(err) warn(tostring(err)) end)
+            task.wait()
         end
 
         --NewWindow.WindowScreenGui.Parent = Parent
