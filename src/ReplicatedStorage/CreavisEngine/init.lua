@@ -48,8 +48,12 @@ function CreavisEngine:LoadEngineDependencies(Reloading:boolean?) -- << I like t
 end
 
 function CreavisEngine:LoadTrainer(Trainer:ModuleScript|table?)
+    if self.Trainer ~= nil then
+        self.Trainer:Terminate()
+    end
+
     if not Trainer then
-        warn("Creavis Engine | Loading Default Trainer ('CreavisTrainer')")
+        warn("Creavis Engine | Loading Default Trainer...")
         Trainer = require(script.CreavisTrainer)
     end
 
@@ -62,15 +66,9 @@ function CreavisEngine:LoadTrainer(Trainer:ModuleScript|table?)
 
     TrainerContext.Trainer.Initialize(self) -- << Starts the Trainer, passes 'self' for the trainer to work with my engine
 
+    self.Trainer = TrainerContext
+
     return TrainerContext
 end
-
-function CreavisEngine:LoadUI(Name)
-    local UIData = self.Dependencies.Engine.RuGuiAdaptor.LoadModuleUI(Name, game.Players.LocalPlayer.PlayerGui, {Title = Name})
-
-    return UIData
-end
-
--- // Backend Engine
 
 return CreavisEngine

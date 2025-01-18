@@ -87,7 +87,7 @@ return {
 
         ExplorerPanel = {
             Type = "Widget",
-            Name = "ExplorerPanel",
+            Name = "Explorer",
             Properties = {
                 Position = UDim2.new(0, 0, 0, 0),
                 Size = UDim2.new(1, 0, 0.5, 0),
@@ -99,7 +99,7 @@ return {
 
         PropertiesPanel = {
             Type = "Widget",
-            Name = "PropertiesPanel",
+            Name = "Properties",
             Properties = {
                 Position = UDim2.new(0, 0, 0.5, 0),
                 Size = UDim2.new(1, 0, 0.5, 0),
@@ -111,7 +111,7 @@ return {
 
         OutputPanel = {
             Type = "Widget",
-            Name = "OutputPanel",
+            Name = "Output",
             Properties = {
                 Position = UDim2.new(0.5, 0, 0.5, 0),
                 Size = UDim2.new(1, 0, 1, 0),

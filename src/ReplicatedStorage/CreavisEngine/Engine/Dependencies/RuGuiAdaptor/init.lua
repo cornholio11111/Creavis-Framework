@@ -67,8 +67,6 @@ function RuGuiAdaptor.LoadModuleUI(ModuleReference: ModuleScript | string, Paren
         ModuleReference = script:FindFirstChild(ModuleReference) or error("Module not found")
     end
 
-    print(ModuleReference, Parent, Configuration)
-
     if not Parent then
         error(".LoadModuleUI() failed to create UI, Parent wasn't sent.")
     end

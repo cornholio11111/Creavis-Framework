@@ -6,15 +6,12 @@
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 
-local UserInterface = script.UserInterface
-local StudioInterfaceModule, StudioStyleSheet = UserInterface:WaitForChild("Studio"), UserInterface:WaitForChild("StudioStyleSheet")
-
 local Trainer = {
     Name = "CreavisTrainer",
 
     References = {
         Player = nil, -- << Module Reference
-        Editor = nil, -- << Module Reference
+        Editor = require(script.Core.Editor), -- << Module Reference
         
     },
 }
@@ -42,11 +39,8 @@ end
 
 function Trainer:ConnectClient()
     local Client = self.Client
-    local RuGuiAdaptor = self.Dependencies.Engine.RuGuiAdaptor
 
-    local StudioUI = RuGuiAdaptor.LoadModuleUI(StudioInterfaceModule, Players.LocalPlayer.PlayerGui, {Title = 'Studio'})
-    StudioUI.Context:SetStyleSheet(require(StudioStyleSheet))
-
+    self.References.Editor = self.References.Editor.Initialize(self) -- << Starts Editor
 end
 
 function Trainer:ConnectServer()
