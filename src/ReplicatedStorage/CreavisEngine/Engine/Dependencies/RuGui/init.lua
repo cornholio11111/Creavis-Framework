@@ -32,6 +32,8 @@ function RuGuiCreateContext.new(RuGuiData:{})
 
     self.Objects = {}
 
+    self.DockInfo = {} -- << Whats widgets are docked where and what stack order
+
     self.CurrentDraggedWidget = nil
     self.LastDraggedWidget = nil
 
@@ -134,6 +136,8 @@ function RuGuiCreateContext:CreateDockFrame(Title:string, Properties:{Position:U
     Dock:SetAttribute("Style", "Dock")
 
     self.Docks[string.lower(Title)] = Dock
+    self.DockInfo[string.lower(Title)] = {}
+
     self.Objects[string.lower(Title)] = Dock
     ApplyStyle(self, Dock)
 
@@ -183,7 +187,7 @@ function RuGuiCreateContext:CreateWidget(Title:string, Properties:{Position:UDim
     Label.TextColor3 = Color3.fromRGB(255, 255, 255)
     Label.TextScaled = true
     Label.Font = Enum.Font.GothamMedium
-    Label.TextXAlignment = Enum.TextXAlignment.Left
+    Label.TextXAlignment = Enum.TextXAlignment.Center
     Label.Parent = DragHandle
     Label:SetAttribute("Type", "WidgetHeaderText")
     Label:SetAttribute("Style", "WidgetHeaderText")
@@ -192,13 +196,14 @@ function RuGuiCreateContext:CreateWidget(Title:string, Properties:{Position:UDim
     local CloseButton = Instance.new("TextButton")
     CloseButton.Name = "CloseButton"
     CloseButton.Size = UDim2.new(0, 10, 0, 10)
-    CloseButton.AnchorPoint = Vector2.new(.5, .5)
-    CloseButton.Position = UDim2.new(.95, 0, .5, 0) -- Right-aligned
+    CloseButton.AnchorPoint = Vector2.new(1, .5)
+    CloseButton.Position = UDim2.new(1, 0, .5, 0) -- Right-aligned
     CloseButton.BackgroundTransparency = 0
     CloseButton.Text = "X"
     CloseButton.TextColor3 = Color3.fromRGB(255, 85, 85)
     CloseButton.TextScaled = true
     CloseButton.Font = Enum.Font.GothamMedium
+    CloseButton.TextXAlignment = Enum.TextXAlignment.Center
     CloseButton.Parent = DragHandle
     CloseButton:SetAttribute("Type", "WidgetHeaderExit")
     CloseButton:SetAttribute("Style", "WidgetHeaderExit")
@@ -474,7 +479,12 @@ function RuGuiCreateContext:CreateButton(Title:string, Properties: {Position:UDi
 
     Button.Name = Title
 
-    Button.LayoutOrder = #ParentReference:GetChildren() + 1
+    local LOrder = #ParentReference:GetChildren()
+    if LOrder > 0 then
+        LOrder += 1
+    end
+
+    Button.LayoutOrder = LOrder
     Button.AnchorPoint = Vector2.new(.5, .5)
     Button.Size = Properties.Size or UDim2.fromScale(.2, .2)
     Button.Position = Properties.Position

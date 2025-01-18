@@ -23,10 +23,12 @@ end
 function Editor:Connect()
     local RuGuiAdaptor = self.CreavisEngine.Dependencies.Engine.RuGuiAdaptor
 
-    self.Dependencies.Freecam:EnableFreecam()
-
     local StudioUI = RuGuiAdaptor.LoadModuleUI(StudioInterfaceModule, Players.LocalPlayer.PlayerGui, {Title = 'Studio'})
     StudioUI.Context:SetStyleSheet(require(StudioStyleSheet))
+
+    task.wait()
+
+    self.Dependencies.Freecam:EnableFreecam()
 end
 
 return Editor

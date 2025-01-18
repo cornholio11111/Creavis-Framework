@@ -190,12 +190,10 @@ local Input = {} do
 	end
 
 	function Input.Fov(dt)
-		-- local kGamepad = (gamepad.ButtonX - gamepad.ButtonY)*FOV_GAMEPAD_SPEED
-		-- local kMouse = mouse.MouseWheel*FOV_WHEEL_SPEED
-		-- mouse.MouseWheel = 0
-		-- return kGamepad + kMouse
-
-		return 70
+		local kGamepad = (gamepad.ButtonX - gamepad.ButtonY)*FOV_GAMEPAD_SPEED
+		local kMouse = mouse.MouseWheel*FOV_WHEEL_SPEED
+		mouse.MouseWheel = 0
+		return kGamepad + kMouse
 	end
 
 	do

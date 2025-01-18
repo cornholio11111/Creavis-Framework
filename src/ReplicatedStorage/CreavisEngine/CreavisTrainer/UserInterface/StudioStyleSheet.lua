@@ -7,10 +7,6 @@ return {
         BorderSizePixel = 0;
     },
 
-    toolbaraction = {
-        
-    },
-
     -- // Widgets
     widget = {
         BackgroundColor3 = Color3.fromRGB(31, 32, 32);

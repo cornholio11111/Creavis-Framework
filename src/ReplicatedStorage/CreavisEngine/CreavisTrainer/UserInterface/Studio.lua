@@ -29,8 +29,8 @@ return {
             Type = "DockFrame",
             Name = "Toolbar",
             Properties = {
-                Position = UDim2.new(0.5, 0, 0.05, 0),
-                Size = UDim2.new(1, 0, 0.1, 0),
+                Position = UDim2.new(0.5, 0, 0.017, 0),
+                Size = UDim2.new(1, 0, 0.032, 0),
                 BackgroundColor3 = Color3.fromRGB(200, 200, 200),
                 Dockable = false
             },
@@ -204,13 +204,13 @@ return {
             Parent = "ToolbarPanel"
         },
 
-        ViewButton = {
+        WidgetButton = {
             Type = "Dropdown",
-            Name = "View",
+            Name = "Widgets",
             Properties = {
                 Position = UDim2.new(0.2, 10, 0, 10),
                 Size = UDim2.new(0.1, 0, 1, 0),
-                Text = "View",
+                Text = "Widgets",
                 BackgroundColor3 = Color3.fromRGB(180, 180, 180),
                 TextColor3 = Color3.fromRGB(0, 0, 0),
             },

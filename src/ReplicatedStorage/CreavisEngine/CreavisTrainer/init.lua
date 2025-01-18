@@ -24,11 +24,6 @@ function Trainer.Initialize(CreavisEngine)
     self.CreavisEngine = CreavisEngine
     self.Dependencies = CreavisEngine.Dependencies
 
-    self.State = {
-        ActiveEditor = false,
-        DebuggingMode = true,
-    }
-
     self.Client, self.Server = {}, {}
 
     if RunService:IsClient() then self.AuthoritySide = "client" self:ConnectClient()
@@ -36,6 +31,12 @@ function Trainer.Initialize(CreavisEngine)
 
     return self
 end
+
+function Trainer:Terminate()
+
+end
+
+-- // CONNECTIONS OF SHIZZ
 
 function Trainer:ConnectClient()
     local Client = self.Client
