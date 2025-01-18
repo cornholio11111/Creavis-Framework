@@ -155,7 +155,7 @@ function RuGuiCreateContext:CreateWidget(Title:string, Properties:{Position:UDim
     Widget:SetAttribute("D_Index", Widget.ZIndex)
 
     local DragHandle = Instance.new("Frame")
-    DragHandle.Size = UDim2.new(1, 0, 0.1, 0)
+    DragHandle.Size = UDim2.new(1, 0, 0, 10)
     DragHandle.AnchorPoint = Vector2.new(0.5, 0)
     DragHandle.Position = UDim2.new(0.5, 0, 0, 0)
     DragHandle.BackgroundColor3 = Color3.fromRGB(50, 50, 150)
@@ -165,7 +165,47 @@ function RuGuiCreateContext:CreateWidget(Title:string, Properties:{Position:UDim
     DragHandle.Parent = Widget
     DragHandle:SetAttribute("Type", "WidgetHeader")
     DragHandle:SetAttribute("Style", "WidgetHeader")
-    
+
+    local UIGradient = Instance.new("UIGradient", DragHandle)
+    UIGradient.Color = ColorSequence.new({
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(60, 60, 60)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(40, 40, 40)),
+    })
+    UIGradient.Rotation = 90
+
+    -- Header label (Title)
+    local Label = Instance.new("TextLabel")
+    Label.Name = "Title"
+    Label.Size = UDim2.new(0.8, 0, .8, 0)
+    Label.Position = UDim2.new(0.05, 0, 0, 0) -- Slight left margin
+    Label.BackgroundTransparency = 1
+    Label.Text = Title
+    Label.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Label.TextScaled = true
+    Label.Font = Enum.Font.GothamMedium
+    Label.TextXAlignment = Enum.TextXAlignment.Left
+    Label.Parent = DragHandle
+    Label:SetAttribute("Type", "WidgetHeaderText")
+    Label:SetAttribute("Style", "WidgetHeaderText")
+
+    -- Close button
+    local CloseButton = Instance.new("TextButton")
+    CloseButton.Name = "CloseButton"
+    CloseButton.Size = UDim2.new(0, 10, 0, 10)
+    CloseButton.AnchorPoint = Vector2.new(.5, .5)
+    CloseButton.Position = UDim2.new(.95, 0, .5, 0) -- Right-aligned
+    CloseButton.BackgroundTransparency = 0
+    CloseButton.Text = "X"
+    CloseButton.TextColor3 = Color3.fromRGB(255, 85, 85)
+    CloseButton.TextScaled = true
+    CloseButton.Font = Enum.Font.GothamMedium
+    CloseButton.Parent = DragHandle
+    CloseButton:SetAttribute("Type", "WidgetHeaderExit")
+    CloseButton:SetAttribute("Style", "WidgetHeaderExit")
+
+    local UICornerClose = Instance.new("UICorner", CloseButton)
+    UICornerClose.CornerRadius = UDim.new(1, 0)
+
     local DragDetector = Instance.new("UIDragDetector", Widget)
     DragDetector.Name = "DragDetector"
     DragDetector.ActivatedCursorIcon = ""
@@ -175,6 +215,11 @@ function RuGuiCreateContext:CreateWidget(Title:string, Properties:{Position:UDim
     local CanEditDragDetector = true
     local IsDragging = false
     local wannaDock = nil
+
+    CloseButton.MouseButton1Click:Connect(function()
+        Widget:SetAttribute("Active", false)
+        Widget.Visible = false
+    end)
 
     local function BringToFront(widget)
         for _, w in pairs(self.Widgets) do
@@ -377,7 +422,7 @@ function RuGuiCreateContext:CreateMenu(Title:string, Properties:{UseListLayout:b
     return {Menu = Menu, Index = Menu.LayoutOrder}
 end
 
-function RuGuiCreateContext:CreateList(Title:string, Properties: {Position:UDim2?, FillDirection:Enum.FillDirection?, Size:UDim2?, AutoAligned:boolean?, UIPadding:UDim, StyleID:string?}, ParentReference)
+function RuGuiCreateContext:CreateList(Title:string, Properties: {Position:UDim2?, FillDirection:Enum.FillDirection?, Size:UDim2?, AutoAligned:boolean?, UIPadding:UDim?, StyleID:string?}, ParentReference)
     Properties.StyleID = Properties.StyleID or "HorizontalList"
     Properties.UIPadding = Properties.UIPadding or UDim.new(.25, 0)
 
@@ -443,10 +488,55 @@ function RuGuiCreateContext:CreateButton(Title:string, Properties: {Position:UDi
     return {Button = Button, Index = Button.LayoutOrder}
 end
 
-function RuGuiCreateContext:CreateLabel(Title: string, Properties: { Position: UDim2, Size: UDim2, Text: string?, IsImage: boolean?, Image: string?, Editable: boolean? }, ParentReference: UIBase)
-    if not ParentReference then
-        error("Parent reference is required to create a label.")
+function RuGuiCreateContext:CreateDropdown(Title:string, Properties: { Position: UDim2, Size: UDim2, Text: string?, IsImage: boolean?, Image: string?}, ParentReference: UIBase)
+    if not ParentReference then error("Parent reference is required to create a dropdown.") end
+
+    local DropdownContext = {}
+
+    DropdownContext.MainButton = self:CreateButton(Title, {
+        Position = Properties.Position,
+        Size = Properties.Size,
+        Text = Properties.Text,
+        IsImage = Properties.IsImage or false,
+        Image = Properties.Image
+    }, ParentReference)
+
+    DropdownContext.DropdownBox = self:CreateList(Title.."List", {
+        Position = UDim2.new(
+            Properties.Position.X.Scale,
+            Properties.Position.X.Offset,
+            Properties.Position.Y.Scale,
+            Properties.Position.Y.Offset + Properties.Size.Y.Offset
+        ),
+
+        Size = UDim2.new(Properties.Size.X.Scale, Properties.Size.X.Offset, 0, 100)
+    }, ParentReference)
+
+    DropdownContext.MainButton.MouseButton1Click:Connect(function()
+        DropdownContext.DropdownBox.Visible = not DropdownContext.DropdownBox.Visible
+    end)
+
+    function DropdownContext:AddOption(Text, MouseButton1Click_Callback)
+        local OptionButton = self:CreateButton(Text, {
+            Position = UDim2.new(0, 0, 0, #DropdownContext.DropdownBox:GetChildren() * 30),
+            Size = UDim2.new(1, 0, 0, 30),
+            Text = Text
+        }, DropdownContext.DropdownBox)
+
+        OptionButton.MouseButton1Click:Connect(function()
+            if MouseButton1Click_Callback then
+                MouseButton1Click_Callback()
+            end
+
+            DropdownContext.DropdownBox.Visible = false
+        end)
     end
+
+    return DropdownContext
+end
+
+function RuGuiCreateContext:CreateLabel(Title: string, Properties: { Position: UDim2, Size: UDim2, Text: string?, IsImage: boolean?, Image: string?, Editable: boolean? }, ParentReference: UIBase)
+    if not ParentReference then error("Parent reference is required to create a label.") end
 
     local Label
     if Properties.IsImage then

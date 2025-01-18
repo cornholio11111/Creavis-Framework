@@ -136,7 +136,7 @@ return {
     -- Toolbar Buttons
     Toolbar = {
         FileButton = {
-            Type = "Button",
+            Type = "Dropdown",
             Name = "File",
             Properties = {
                 Position = UDim2.new(0, 10, 0, 10),
@@ -145,11 +145,49 @@ return {
                 BackgroundColor3 = Color3.fromRGB(180, 180, 180),
                 TextColor3 = Color3.fromRGB(0, 0, 0),
             },
+
+            Options = {
+                NewWorkspace = {
+                    Name = "NewWorkspace",
+                    Properties = {
+                        Text = "New Workspace",
+                        StyleID = "Button",
+                    },
+
+                    ConnectFunctionality = nil,
+                    MouseButton1ClickActivation = nil,
+                };
+
+                Save = {
+                    Name = "SaveWorkspace",
+                    Properties = {
+                        Text = "Save Workspace",
+                        StyleID = "Button",
+                    },
+
+                    ConnectFunctionality = nil,
+                    MouseButton1ClickActivation = nil,
+                };
+
+                Seperator = {Type = "Seperator", Size = "Full"};
+
+                Exit = {
+                    Name = "Exit",
+                    Properties = {
+                        Text = "File",
+                        StyleID = "Button",
+                    },
+
+                    MouseButton1ClickActivation = nil,
+                };
+                
+            },
+
             Parent = "ToolbarPanel"
         },
 
         EditButton = {
-            Type = "Button",
+            Type = "Dropdown",
             Name = "Edit",
             Properties = {
                 Position = UDim2.new(0.1, 10, 0, 10),
@@ -158,11 +196,16 @@ return {
                 BackgroundColor3 = Color3.fromRGB(180, 180, 180),
                 TextColor3 = Color3.fromRGB(0, 0, 0),
             },
+
+            Options = {
+
+            },
+
             Parent = "ToolbarPanel"
         },
 
         ViewButton = {
-            Type = "Button",
+            Type = "Dropdown",
             Name = "View",
             Properties = {
                 Position = UDim2.new(0.2, 10, 0, 10),
@@ -171,6 +214,11 @@ return {
                 BackgroundColor3 = Color3.fromRGB(180, 180, 180),
                 TextColor3 = Color3.fromRGB(0, 0, 0),
             },
+
+            Options = {
+
+            },
+
             Parent = "ToolbarPanel"
         },
     },

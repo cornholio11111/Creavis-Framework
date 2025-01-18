@@ -53,7 +53,16 @@ function CreavisEngine:LoadTrainer(Trainer:ModuleScript|table?)
         Trainer = require(script.CreavisTrainer)
     end
 
-    
+    local TrainerContext = {}
+    TrainerContext.Trainer = Trainer
+
+    if not TrainerContext.Trainer.Initialize then
+        error("Loaded Trainer Doesn't have a .Initialize(CreavisEngine) function, please add on to handle the Trainer propertly")
+    end
+
+    TrainerContext.Trainer.Initialize(self) -- << Starts the Trainer, passes 'self' for the trainer to work with my engine
+
+    return TrainerContext
 end
 
 function CreavisEngine:LoadUI(Name)

@@ -8,7 +8,7 @@ return {
     },
 
     toolbaraction = {
-
+        
     },
 
     -- // Widgets
@@ -18,6 +18,19 @@ return {
 
     widgetheader = {
         BackgroundColor3 = Color3.fromRGB(40, 40, 40);
+    },
+
+    widgetheadertext = {
+        BackgroundTransparency = 1;
+        TextColor3 = Color3.fromRGB(200, 200, 200);
+        TextScaled = true
+    },
+
+    widgetheaderexit = {
+        BackgroundColor3 = Color3.fromRGB(99, 99, 99);
+        BackgroundTransparency = .1;
+        TextColor3 = Color3.fromRGB(200, 200, 200);
+        TextScaled = true
     },
 
     -- // base ui

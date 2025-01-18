@@ -6,33 +6,29 @@ RuGuiAdaptor.__index = RuGuiAdaptor
 
 RuGuiAdaptor.LoadedModules = {}
 
-function DetectType(Context, ObjectData) -- << Extra Code for depending object types
-    local returnedData = {}
+local function CreateOBJ(Context, ObjectData, ConnectFunctionality)
+    local Packet = CreatePacket(Context, ObjectData)
 
-    if ObjectData.Type == "Widget" then
-        
-    end
+    pcall(function()
+        local ObjectContext = Context["Create" .. ObjectData.Type](Context, table.unpack(Packet))
 
-    if ObjectData.Type == "Dock" then
-        
-    end
+        if ObjectData.Type == "Dropdown" then
+            for index, OptionsData in pairs(ObjectData.Options) do
+                CreateOBJ(Context, OptionsData, nil)
+            end
+        end
 
-    if ObjectData.Type == "Button" then
-        
-    end
-
-    if ObjectData.Type == "Menu" then
-        
-    end
-
-    return returnedData
+        if ConnectFunctionality then
+            ConnectFunctionality(ObjectContext, ObjectData)
+        end
+    
+    end, function(err)
+        warn("Error creating object of type " .. ObjectData.Type .. ": " .. tostring(err))
+    end)
 end
 
 function CreatePacket(Context, ObjectData)
     local Parent = nil
-
-    -- local returnedTypeData = DetectType(Context, ObjectData)
-    -- << Prob will add back in for more in-depth customizations ig
 
     if ObjectData.Dock then
         Parent = ObjectData.Dock
@@ -71,11 +67,15 @@ function RuGuiAdaptor.LoadModuleUI(ModuleReference: ModuleScript | string, Paren
         ModuleReference = script:FindFirstChild(ModuleReference) or error("Module not found")
     end
 
+    print(ModuleReference, Parent, Configuration)
+
     if not Parent then
         error(".LoadModuleUI() failed to create UI, Parent wasn't sent.")
     end
 
-    Configuration.Title = Configuration.Title or ModuleReference.Name
+    if not Configuration.Title then
+        Configuration.Title = ModuleReference.Name
+    end
 
     local RequiredModule = require(ModuleReference)
 
@@ -103,34 +103,23 @@ function RuGuiAdaptor.LoadModuleUI(ModuleReference: ModuleScript | string, Paren
         local Docks = RequiredModule.Docks
         local Panels = RequiredModule.Panels
 
-        local function CreateOBJ(ObjectData)
-            local Packet = CreatePacket(Context, ObjectData)
-
-            pcall(function()
-                local ObjectContext = Context["Create" .. ObjectData.Type](Context, table.unpack(Packet))
-                ConnectFunctionality(ObjectContext, ObjectData)
-            end, function(err)
-                warn("Error creating object of type " .. ObjectData.Type .. ": " .. tostring(err))
-            end)
-        end
-
         for objIndex, ObjectData in pairs(Docks) do
             pcall(function()
-                CreateOBJ(ObjectData)
+                CreateOBJ(Context, ObjectData, ConnectFunctionality)
             end, function(err) warn(tostring(err)) end)
             task.wait()
         end
 
         for objIndex, ObjectData in pairs(Panels) do
             pcall(function()
-                CreateOBJ(ObjectData)
+                CreateOBJ(Context, ObjectData, ConnectFunctionality)
             end, function(err) warn(tostring(err)) end)
             task.wait()
         end
 
         for objIndex, ObjectData in pairs(Toolbar) do
             pcall(function()
-                CreateOBJ(ObjectData)
+                CreateOBJ(Context, ObjectData, ConnectFunctionality)
             end, function(err) warn(tostring(err)) end)
             task.wait()
         end
