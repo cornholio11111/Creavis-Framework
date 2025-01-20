@@ -9,7 +9,7 @@ local Packager = {}
 Packager.__index = Packager
 
 function Packager.new()
-    local self = setmetatable(Packager, {})
+    local self = setmetatable({}, Packager)
 
     self.CompressedPackage = {} -- << This is the final product that gets saved to the datastore keep it clean... please self
     self.Data = {} -- << This gets packed with alot of data, nothing optimized idk just data

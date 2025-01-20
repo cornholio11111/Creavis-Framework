@@ -15,11 +15,12 @@ local Trainer = {
         
     },
 }
+Trainer.__index = Trainer
 
 Trainer.Dependencies = {}
 
 function Trainer.Initialize(CreavisEngine)
-    local self = setmetatable(Trainer, {})
+    local self = setmetatable({}, Trainer)
 
     self.CreavisEngine = CreavisEngine
     self.Dependencies = CreavisEngine.Dependencies

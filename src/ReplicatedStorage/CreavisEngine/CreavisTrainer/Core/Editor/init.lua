@@ -11,7 +11,7 @@ Editor.Dependencies = {
 }
 
 function Editor.Initialize(CreavisEngine)
-    local self = setmetatable(Editor, {})
+    local self = setmetatable({}, Editor)
     self.CreavisEngine = CreavisEngine
 
     self.EditorActive = false
@@ -29,6 +29,7 @@ function Editor:Connect()
     task.wait()
 
     self.Dependencies.Freecam:EnableFreecam()
+    self.Dependencies.MovementTools.Initialize(self)
 end
 
 return Editor

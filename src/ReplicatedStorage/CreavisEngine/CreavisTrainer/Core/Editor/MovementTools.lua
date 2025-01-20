@@ -1,44 +1,45 @@
+-- Change Tool
+
+-- Input Handler
+
+-- Mouse Handler
+
+-- Selection Handler
+
 local MovementTools = {}
+MovementTools.__index = MovementTools
 
-MovementTools.Dependencies = {}
+function MovementTools.Initialize(EdtiorReference)
+    local self = setmetatable({}, MovementTools)
+    self.EdtiorReference = EdtiorReference
 
-function MovementTools.Initialize(CreavisEngine)
-    local self = setmetatable(MovementTools, {})
-    self.CreavisEngine = CreavisEngine
+    self.SelectionContext = self:CreateSelectionContext()
 
-    self.SelectedTool = "select"
-    --[[
-        Tools:
-    
-        'Select'
-        'Move'
-        'Size'
-        'Rotate'
-        'Transform'
-    ]]--
+    self.SelectionContext.Initialize() -- << Starts the Selection Functionality
 
-    self:Connect()
+    self.CurrentTool = "None"
+    self.CurrentSelection = {}
+
     return self
 end
 
-function MovementTools:Connect()
+function MovementTools:CreateSelectionContext()
+    local SelectionContext = {}
+    self.MovementToolReference = MovementTools
 
+    function SelectionContext.Initialize()
+        
+    end
+
+    return SelectionContext
 end
 
-function MovementTools:SwapTool(ToolID)
-    self.SelectedTool = string.lower(ToolID)
+function MovementTools:ChangeTool(ToolID:string)
+    ToolID = string.lower(ToolID)
+
+    if ToolID == "move" then
+        
+    end
 end
-
--- Swap tools
-
--- movement tools
-
--- resize tools
-
--- rotate tools
-
--- bounding box
-
--- hover over highlight
 
 return MovementTools
