@@ -14,6 +14,8 @@ local RunService = game:GetService("RunService")
     - add dock stacking of widgets
     - add toolbar dropdowns
 
+    - fix the slowness on this framework
+
 ]]--
 
 local RuGuiCreateContext = {}
@@ -31,8 +33,6 @@ function RuGuiCreateContext.new(RuGuiData:{})
     self.Widgets = {}
 
     self.Objects = {}
-
-    self.DockInfo = {} -- << Whats widgets are docked where and what stack order
 
     self.CurrentDraggedWidget = nil
     self.LastDraggedWidget = nil
@@ -73,7 +73,7 @@ function RuGuiCreateContext:SetStyleSheet(StyleSheetData:{})
     self.StyleSheet = StyleSheetData
 
     for __index, Data in pairs(self.Docks) do
-        ApplyStyle(self, Data)
+        ApplyStyle(self, Data.Dock)
         task.wait()
     end
 
@@ -91,9 +91,32 @@ function RuGuiCreateContext:DockWidget(Widget:string, Dock:string)
     
     if WidgetReference then
         if DockReference then
+            print(DockReference)
+            local _Dock = DockReference.Dock
+            local DockWidgets = DockReference.Data.Widgets
+
+            local OLDDOCKID = nil
+
+            if WidgetReference:GetAttribute("DockID") ~= 'nil' then
+                OLDDOCKID = WidgetReference:GetAttribute("DockID")
+                local OLDDockReference = self.Docks[string.lower(OLDDOCKID)]
+                local OLDDock = OLDDockReference.Dock
+                local OLDDockWidgets = OLDDockReference.Data.Widgets
+                
+                OLDDockWidgets[Widget] = nil
+            end
+
+
+            WidgetReference:SetAttribute("DockID", Dock)
+            DockWidgets[Widget] = {LayoutOrder = #DockWidgets, Selected = true}
+
+            -- << Added docking with multiple UI, now need to add some sort of updater for this...
+            self:DockUpdated(Dock)
+            if OLDDOCKID then self:DockUpdated(OLDDOCKID) end
+
             -- DOCK THE FRAME!!
-            WidgetReference.Position = DockReference.Position
-            WidgetReference.Size = DockReference.Size
+            WidgetReference.Position = _Dock.Position
+            WidgetReference.Size = _Dock.Size
             ApplyStyle(self, WidgetReference)
         else
             error(Dock.." can't be found in self.Docks!")
@@ -101,6 +124,13 @@ function RuGuiCreateContext:DockWidget(Widget:string, Dock:string)
     else
         error(Widget.." can't be found in self.Widgets!")
     end
+end
+
+function RuGuiCreateContext:DockUpdated(Dock:string)
+    local DockReference = self.Docks[string.lower(Dock)]
+
+    -- local Tablist = self:CreateTabList(Dock.."Tablist", {Position = UDim2.new(), Size = UDim2.new()}, DockReference.Dock)
+   --<<  
 end
 
 
@@ -135,8 +165,9 @@ function RuGuiCreateContext:CreateDockFrame(Title:string, Properties:{Position:U
 
     Dock:SetAttribute("Style", "Dock")
 
-    self.Docks[string.lower(Title)] = Dock
-    self.DockInfo[string.lower(Title)] = {}
+    self.Docks[string.lower(Title)] = {Dock = Dock, Data = {Widgets = {};}} -- << EXAMPLE: {Name:string, LayoutOrder:number, Selected:boolean}
+
+    -- local Tablist = self:CreateTabList(Dock.."Tablist", {Position = UDim2.new(-.9, 0, .5, 0), Size = UDim2.new(1, 0, 0, 20)}, Dock)
 
     self.Objects[string.lower(Title)] = Dock
     ApplyStyle(self, Dock)
@@ -157,6 +188,8 @@ function RuGuiCreateContext:CreateWidget(Title:string, Properties:{Position:UDim
     Widget:SetAttribute("Type", "Widget")
     Widget:SetAttribute("Style", "Widget")
     Widget:SetAttribute("D_Index", Widget.ZIndex)
+
+    Widget:SetAttribute("DockID", 'nil')
 
     local DragHandle = Instance.new("Frame")
     DragHandle.Size = UDim2.new(1, 0, 0, 10)
@@ -243,6 +276,7 @@ function RuGuiCreateContext:CreateWidget(Title:string, Properties:{Position:UDim
             self.Connections["DragRenderStepped"..Title] = RunService:BindToRenderStep("DragRenderStepped"..Title, 0, function()
                 if IsDragging then
                     for _, dock in pairs(self.Docks) do
+                        dock = dock.Dock
                         if dock:GetAttribute("Dockable") and IsNearDock(dock, 15) then
                             wannaDock = dock
 
@@ -301,6 +335,8 @@ function RuGuiCreateContext:CreateWidget(Title:string, Properties:{Position:UDim
             warn(DockAt.." wasn't found, check your spelling maybe?")
             error(self.Docks)
         end
+
+        DockReference = DockReference.Dock
 
         Widget.Position = DockReference.Position
         Widget.Size = DockReference.Size
@@ -585,6 +621,43 @@ function RuGuiCreateContext:CreateLabel(Title: string, Properties: { Position: U
     end
 
     return {Label = Label, Index = Label.LayoutOrder}
+end
+
+function RuGuiCreateContext:CreateTabList(Title: string, Properties: { Position: UDim2, Size: UDim2, StyleID:string? }, ParentReference: UIBase)
+    -- << uses a list to create a tab list using UI, that is interactable.
+
+    -- << Use a context holder for each list, which allows to link?
+    -- << :AddTab(Title:string, Properties: {}, MouseButton1ClickEvent)
+    -- << :RemoveTab(Title:string)
+    Properties.StyleID = Properties.StyleID or 'TabList'
+
+    local TabListContext = {}
+
+    TabListContext.ListBox = self:CreateList(Title, Properties, ParentReference)
+    
+    -- Instance.new("Frame", ParentReference)
+    -- TabListContext.ListBox.Position = Properties.Position --or GetBottomOfParent()
+    -- TabListContext.ListBox.Size = Properties.Size or UDim2.new(1, 0, .05, 0)
+    
+    -- TabListContext.ListBox:SetAttribute("StyleID", Properties.StyleID)
+
+    TabListContext.Tabs = {}
+
+    function TabListContext.AddTab(TabTitle:string, TabProperties: {})
+        local NewTabButton = self:CreateButton(TabTitle, TabProperties, TabListContext)
+
+        TabListContext.Tabs[TabTitle] = NewTabButton
+
+        return NewTabButton, #TabListContext.Tabs
+    end
+
+    function TabListContext.RemoveTab(TabTitle:string)
+        if TabListContext.Tabs[TabTitle] then
+            TabListContext.Tabs[TabTitle] = nil
+        end
+    end
+
+    return TabListContext
 end
 
 --#endregion

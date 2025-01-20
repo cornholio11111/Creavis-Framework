@@ -1,3 +1,5 @@
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
 -- Change Tool
 
 -- Input Handler
@@ -13,25 +15,25 @@ function MovementTools.Initialize(EdtiorReference)
     local self = setmetatable({}, MovementTools)
     self.EdtiorReference = EdtiorReference
 
-    self.SelectionContext = self:CreateSelectionContext()
-
-    self.SelectionContext.Initialize() -- << Starts the Selection Functionality
-
     self.CurrentTool = "None"
     self.CurrentSelection = {}
 
+    self:Connect()
     return self
 end
 
-function MovementTools:CreateSelectionContext()
-    local SelectionContext = {}
-    self.MovementToolReference = MovementTools
+function MovementTools:Connect()
+    
+end
 
-    function SelectionContext.Initialize()
+function MovementTools:HandleMouseButtonClick(MouseButtonID:number) -- << Handle when mouse is clicked and detect if a object is selected
+    if MouseButtonID == 1 then
         
     end
 
-    return SelectionContext
+    if MouseButtonID == 2 then
+        
+    end
 end
 
 function MovementTools:ChangeTool(ToolID:string)

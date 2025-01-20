@@ -10,10 +10,12 @@ return {
     -- // Widgets
     widget = {
         BackgroundColor3 = Color3.fromRGB(31, 32, 32);
+        BorderSizePixel = 0;
     },
 
     widgetheader = {
         BackgroundColor3 = Color3.fromRGB(40, 40, 40);
+        BorderSizePixel = 0;
     },
 
     widgetheadertext = {

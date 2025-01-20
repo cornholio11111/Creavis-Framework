@@ -18,6 +18,8 @@ local Functionality = { Type = "Functionality";
     - add explorer
     - add properties panel
     - add movement tools
+
+    - add top navigation buttons
 ]]
 
 return {
@@ -25,12 +27,24 @@ return {
 
     -- Dock Frames
     Docks = {
-        Toolbar = {
+        Toolbar = { -- << Holds 'File', 'Edit', & 'Widgets'
             Type = "DockFrame",
             Name = "Toolbar",
             Properties = {
                 Position = UDim2.new(0.5, 0, 0.017, 0),
                 Size = UDim2.new(1, 0, 0.032, 0),
+                BackgroundColor3 = Color3.fromRGB(200, 200, 200),
+                ClipDescendants = true,
+                Dockable = false
+            },
+        },
+
+        QuickActions = { -- << Add tabs to this
+            Type = "DockFrame",
+            Name = "QuickActions",
+            Properties = {
+                Position = UDim2.new(0.5, 0, 0.07, 0),
+                Size = UDim2.new(1, 0, 0.06, 0),
                 BackgroundColor3 = Color3.fromRGB(200, 200, 200),
                 Dockable = false
             },
@@ -68,6 +82,22 @@ return {
                 Dockable = true
             },
         },
+    },
+
+    -- Quick Actions
+    QuickActions = {
+        -- QA_ = {
+        --     Type = "Widget",
+        --     Name = "Toolbox",
+        --     Properties = {
+        --         Position = UDim2.new(0.9, 0, 0.5, 0),
+        --         Size = UDim2.new(0.2, 0, 0.8, 0),
+
+        --         BackgroundColor3 = Color3.fromRGB(240, 240, 240),
+        --         Scrollable = true,
+        --     },
+        --     Dock = "LeftDock",
+        -- },
     },
 
     -- Panels and Widgets
