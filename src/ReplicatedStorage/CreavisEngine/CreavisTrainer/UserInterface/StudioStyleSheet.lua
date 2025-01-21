@@ -50,7 +50,8 @@ return {
     textbutton = {
         BackgroundColor3 = Color3.fromRGB(26, 26, 26);
         TextColor3 = Color3.fromRGB(200, 200, 200);
-        TextScaled = true
+        TextScaled = true;
+        BorderSizePixel = 0;
     },
 
     imagebutton = {

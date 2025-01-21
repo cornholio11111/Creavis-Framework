@@ -158,9 +158,25 @@ return {
                 Size = UDim2.new(1, 0, 1, 0),
                 FillDirection = Enum.FillDirection.Horizontal,
                 UIPadding = UDim.new(0, 0),
+                LayoutType = "List"
             },
             Parent = "Toolbar"
         },
+
+        QuickActionsBackground = {
+            Type = "List",
+            Name = "QuickActionsPages",
+            Properties = {
+                Position = UDim2.new(0.5, 0, 0.5, 0),
+                Size = UDim2.new(1, 0, 1, 0),
+                FillDirection = Enum.FillDirection.Horizontal,
+                UIPadding = UDim.new(0, 0),
+                LayoutType = "Page"
+            },
+            Parent = "QuickActions"
+        },
+
+
     },
 
     -- Toolbar Buttons
