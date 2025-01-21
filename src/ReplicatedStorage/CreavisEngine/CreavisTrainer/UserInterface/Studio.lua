@@ -19,7 +19,7 @@ local Functionality = { Type = "Functionality";
     - add properties panel
     - add movement tools
 
-    - add top navigation buttons
+    - add top navigation buttons : DONE
 ]]
 
 return {
@@ -82,6 +82,21 @@ return {
                 Dockable = true
             },
         },
+
+        -- // Quick Actions
+        QuickActionsBackground = {
+            Type = "List",
+            Name = "QuickActionsPages",
+            Properties = {
+                Position = UDim2.new(0.5, 0, 0.5, 0),
+                Size = UDim2.new(1, 0, 1, 0),
+                FillDirection = Enum.FillDirection.Horizontal,
+                UIPadding = UDim.new(0, 0),
+                LayoutType = "Page"
+            },
+            Parent = "QuickActions"
+        },
+
     },
 
     -- Quick Actions
@@ -163,19 +178,57 @@ return {
             Parent = "Toolbar"
         },
 
-        QuickActionsBackground = {
+        QAHomePage = {
             Type = "List",
-            Name = "QuickActionsPages",
+            Name = "HomePage",
             Properties = {
                 Position = UDim2.new(0.5, 0, 0.5, 0),
                 Size = UDim2.new(1, 0, 1, 0),
-                FillDirection = Enum.FillDirection.Horizontal,
+                FillDirection = Enum.FillDirection.Vertical,
                 UIPadding = UDim.new(0, 0),
-                LayoutType = "Page"
+                LayoutType = "List",
             },
-            Parent = "QuickActions"
+            Parent = "QuickActionsPages"
         },
 
+        QAModelPage = {
+            Type = "List",
+            Name = "ModelPage",
+            Properties = {
+                Position = UDim2.new(0.5, 0, 0.5, 0),
+                Size = UDim2.new(1, 0, 1, 0),
+                FillDirection = Enum.FillDirection.Vertical,
+                UIPadding = UDim.new(0, 0),
+                LayoutType = "List",
+            },
+            Parent = "QuickActionsPages"
+        },
+
+        QAViewPage = {
+            Type = "List",
+            Name = "ViewPage",
+            Properties = {
+                Position = UDim2.new(0.5, 0, 0.5, 0),
+                Size = UDim2.new(1, 0, 1, 0),
+                FillDirection = Enum.FillDirection.Vertical,
+                UIPadding = UDim.new(0, 0),
+                LayoutType = "List",
+            },
+            Parent = "QuickActionsPages"
+        },
+
+        QAPluginPage = {
+            Type = "List",
+            Name = "PluginPage",
+            Properties = {
+                Position = UDim2.new(0.5, 0, 0.5, 0),
+                Size = UDim2.new(1, 0, 1, 0),
+                FillDirection = Enum.FillDirection.Vertical,
+                UIPadding = UDim.new(0, 0),
+                LayoutType = "List",
+            },
+            Parent = "QuickActionsPages"
+        },
 
     },
 

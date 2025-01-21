@@ -98,6 +98,9 @@ function RuGuiAdaptor.LoadModuleUI(ModuleReference: ModuleScript | string, Paren
             end
         end
 
+        -- change RuGui too a Layer Rendering Based UI system, instead of loading like this
+        -- maybe keep Docks as its own table because its the damn docks
+
         createObjects(Docks)
         createObjects(Panels)
         createObjects(Toolbar)
@@ -109,7 +112,7 @@ function RuGuiAdaptor.LoadModuleUI(ModuleReference: ModuleScript | string, Paren
     local Data = {
         Window = NewWindow;
         Context = Context;
-        Module = RequiredModule
+        Module = RequiredModule;
     }
 
     RuGuiAdaptor.LoadedModules[Configuration.Title] = Data
