@@ -30,6 +30,7 @@ return {
         Toolbar = { -- << Holds 'File', 'Edit', & 'Widgets'
             Type = "DockFrame",
             Name = "Toolbar",
+            Priority = 1,
             Properties = {
                 Position = UDim2.new(0.5, 0, 0.017, 0),
                 Size = UDim2.new(1, 0, 0.032, 0),
@@ -42,6 +43,7 @@ return {
         QuickActions = { -- << Add tabs to this
             Type = "DockFrame",
             Name = "QuickActions",
+            Priority = 2,
             Properties = {
                 Position = UDim2.new(0.5, 0, 0.07, 0),
                 Size = UDim2.new(1, 0, 0.06, 0),
@@ -53,6 +55,7 @@ return {
         LeftDock = {
             Type = "DockFrame",
             Name = "LeftDock",
+            Priority = 3,
             Properties = {
                 Position = UDim2.new(0.1, 0, 0.45, 0),
                 Size = UDim2.new(0.2, 0, 0.7, 0),
@@ -64,6 +67,7 @@ return {
         RightDock = {
             Type = "DockFrame",
             Name = "RightDock",
+            Priority = 4,
             Properties = {
                 Position = UDim2.new(0.9, 0, 0.45, 0),
                 Size = UDim2.new(0.2, 0, 0.7, 0),
@@ -75,6 +79,7 @@ return {
         BottomDock = {
             Type = "DockFrame",
             Name = "BottomDock",
+            Priority = 5,
             Properties = {
                 Position = UDim2.new(0.5, 0, 0.9, 0),
                 Size = UDim2.new(1, 0, 0.2, 0),
@@ -84,55 +89,55 @@ return {
         },
 
         -- // Quick Actions
-        QuickActionsBackground = {
-            Type = "List",
+        QuickActionsBackground = { -- // Title, Properties:{Position:UDim2, Size:UDim2, StyleID:string?}, WidgetID
+            Type = "Frame",
             Name = "QuickActionsPages",
+            Priority = 6,
             Properties = {
                 Position = UDim2.new(0.5, 0, 0.5, 0),
                 Size = UDim2.new(1, 0, 1, 0),
-                FillDirection = Enum.FillDirection.Horizontal,
-                UIPadding = UDim.new(0, 0),
-                LayoutType = "Page"
             },
-            Parent = "QuickActions"
+            Dock = "QuickActions"
         },
 
     },
 
     -- Quick Actions
     QuickActions = {
-        -- QA_ = {
-        --     Type = "Widget",
-        --     Name = "Toolbox",
-        --     Properties = {
-        --         Position = UDim2.new(0.9, 0, 0.5, 0),
-        --         Size = UDim2.new(0.2, 0, 0.8, 0),
+        QAHomePage_MovementTools = {
+            Type = "List",
+            Name = "HomePageMovementTools",
+            Priority = 1,
+            Properties = {
+                Size = UDim2.new(0.2, 0, 1, 0),
 
-        --         BackgroundColor3 = Color3.fromRGB(240, 240, 240),
-        --         Scrollable = true,
-        --     },
-        --     Dock = "LeftDock",
-        -- },
+                BackgroundColor3 = Color3.fromRGB(240, 240, 240),
+                Scrollable = true,
+            },
+            Parent = "HomePage",
+        },
+
+        QAHomePage_MovementTools_Select = {
+            Type = "Button",
+            Name = "Select",
+            Priority = 2,
+            Properties = {
+                Size = UDim2.new(0, 30, 0, 30),
+
+                BackgroundColor3 = Color3.fromRGB(240, 240, 240),
+                Scrollable = true,
+            },
+            Parent = "HomePageMovementTools",
+        },
+
     },
 
     -- Panels and Widgets
     Panels = {
-        -- Toolbox = {
-        --     Type = "Widget",
-        --     Name = "Toolbox",
-        --     Properties = {
-        --         Position = UDim2.new(0.9, 0, 0.5, 0),
-        --         Size = UDim2.new(0.2, 0, 0.8, 0),
-
-        --         BackgroundColor3 = Color3.fromRGB(240, 240, 240),
-        --         Scrollable = true,
-        --     },
-        --     Dock = "LeftDock",
-        -- },
-
         ExplorerPanel = {
             Type = "Widget",
             Name = "Explorer",
+            Priority = 1,
             Properties = {
                 Position = UDim2.new(0, 0, 0, 0),
                 Size = UDim2.new(1, 0, 0.5, 0),
@@ -145,6 +150,7 @@ return {
         PropertiesPanel = {
             Type = "Widget",
             Name = "Properties",
+            Priority = 2,
             Properties = {
                 Position = UDim2.new(0, 0, 0.5, 0),
                 Size = UDim2.new(1, 0, 0.5, 0),
@@ -157,6 +163,7 @@ return {
         OutputPanel = {
             Type = "Widget",
             Name = "Output",
+            Priority = 3,
             Properties = {
                 Position = UDim2.new(0.5, 0, 0.5, 0),
                 Size = UDim2.new(1, 0, 1, 0),
@@ -168,6 +175,7 @@ return {
         ToolbarPanel = {
             Type = "List",
             Name = "ToolbarPanel",
+            Priority = 4,
             Properties = {
                 Position = UDim2.new(0.5, 0, 0.5, 0),
                 Size = UDim2.new(1, 0, 1, 0),
@@ -181,6 +189,7 @@ return {
         QAHomePage = {
             Type = "List",
             Name = "HomePage",
+            Priority = 5,
             Properties = {
                 Position = UDim2.new(0.5, 0, 0.5, 0),
                 Size = UDim2.new(1, 0, 1, 0),
@@ -194,6 +203,7 @@ return {
         QAModelPage = {
             Type = "List",
             Name = "ModelPage",
+            Priority = 6,
             Properties = {
                 Position = UDim2.new(0.5, 0, 0.5, 0),
                 Size = UDim2.new(1, 0, 1, 0),
@@ -207,6 +217,7 @@ return {
         QAViewPage = {
             Type = "List",
             Name = "ViewPage",
+            Priority = 7,
             Properties = {
                 Position = UDim2.new(0.5, 0, 0.5, 0),
                 Size = UDim2.new(1, 0, 1, 0),
@@ -220,6 +231,7 @@ return {
         QAPluginPage = {
             Type = "List",
             Name = "PluginPage",
+            Priority = 8,
             Properties = {
                 Position = UDim2.new(0.5, 0, 0.5, 0),
                 Size = UDim2.new(1, 0, 1, 0),
@@ -237,6 +249,7 @@ return {
         FileButton = {
             Type = "Dropdown",
             Name = "File",
+            Priority = 1,
             Properties = {
                 Position = UDim2.new(0, 10, 0, 10),
                 Size = UDim2.new(0.1, 0, 1, 0),
@@ -248,6 +261,7 @@ return {
             Options = {
                 NewWorkspace = {
                     Name = "NewWorkspace",
+                    Priority = 1,
                     Properties = {
                         Text = "New Workspace",
                         StyleID = "Button",
@@ -255,10 +269,11 @@ return {
 
                     ConnectFunctionality = nil,
                     MouseButton1ClickActivation = nil,
-                };
+                },
 
                 Save = {
                     Name = "SaveWorkspace",
+                    Priority = 2,
                     Properties = {
                         Text = "Save Workspace",
                         StyleID = "Button",
@@ -266,20 +281,20 @@ return {
 
                     ConnectFunctionality = nil,
                     MouseButton1ClickActivation = nil,
-                };
+                },
 
-                Seperator = {Type = "Seperator", Size = "Full"};
+                Seperator = {Type = "Seperator", Priority = 3, Size = "Full"},
 
                 Exit = {
                     Name = "Exit",
+                    Priority = 4,
                     Properties = {
                         Text = "File",
                         StyleID = "Button",
                     },
 
                     MouseButton1ClickActivation = nil,
-                };
-                
+                },
             },
 
             Parent = "ToolbarPanel"
@@ -288,6 +303,7 @@ return {
         EditButton = {
             Type = "Dropdown",
             Name = "Edit",
+            Priority = 2,
             Properties = {
                 Position = UDim2.new(0.1, 10, 0, 10),
                 Size = UDim2.new(0.1, 0, 1, 0),
@@ -306,6 +322,7 @@ return {
         WidgetButton = {
             Type = "Dropdown",
             Name = "Widgets",
+            Priority = 3,
             Properties = {
                 Position = UDim2.new(0.2, 10, 0, 10),
                 Size = UDim2.new(0.1, 0, 1, 0),

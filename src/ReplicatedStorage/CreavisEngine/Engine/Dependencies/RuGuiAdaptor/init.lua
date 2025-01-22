@@ -6,19 +6,35 @@ RuGuiAdaptor.__index = RuGuiAdaptor
 
 RuGuiAdaptor.LoadedModules = {}
 
--- CreateOBJ function optimized with direct function calls instead of using task.wait and coroutine.wrap
+local function CreatePacket(Context, ObjectData)
+    local Parent = ObjectData.Dock or ObjectData.Parent
+    if ObjectData.Parent then
+        Parent = string.lower(ObjectData.Parent)
+        local reference = Context.Objects[Parent]
+        if not reference then
+            reference = table.find(Context.Objects, Parent)
+        end
+        if reference then
+            Parent = reference
+        else
+            print("Warning: Parent not found for " .. ObjectData.Name)
+        end
+    end
+    return {ObjectData.Name, ObjectData.Properties, Parent}
+end
+
 local function CreateOBJ(Context, ObjectData, ConnectFunctionality)
     local Packet = CreatePacket(Context, ObjectData)
+    local ObjectType = ObjectData.Type
 
     local Options = ObjectData.Options or {}
     local Type = ObjectData.Type
 
     local ObjectContext = Context["Create" .. Type](Context, table.unpack(Packet))
 
-    -- Handle dropdown options if they exist
-    if Type == "Dropdown" then
-        for _, OptionsData in pairs(Options) do
-            ObjectContext.AddOption(OptionsData, ObjectContext.DropdownBox)
+    if ObjectType == "Dropdown" then
+        for _, OptionsData in pairs(Options or {}) do
+            ObjectContext:AddOption(OptionsData, ObjectContext.DropdownBox)
         end
     end
 
@@ -28,28 +44,6 @@ local function CreateOBJ(Context, ObjectData, ConnectFunctionality)
     end
 end
 
--- Optimized CreatePacket function
-function CreatePacket(Context, ObjectData)
-    local Parent = ObjectData.Dock or ObjectData.Parent
-
-    if ObjectData.Parent then
-        Parent = string.lower(ObjectData.Parent)
-        local reference = Context.Objects[Parent]
-        if not reference then
-            reference = table.find(Context.Objects, Parent)
-        end
-
-        if reference then
-            Parent = reference
-        else
-            print("Warning: Parent not found for " .. ObjectData.Name)
-        end
-    end
-
-    return {ObjectData.Name, ObjectData.Properties, Parent}
-end
-
--- LoadModuleUI optimized by avoiding redundant task.wait
 function RuGuiAdaptor.LoadModuleUI(ModuleReference: ModuleScript | string, Parent: any, Configuration: {Title: string?})
     if typeof(ModuleReference) == "string" then
         ModuleReference = script:FindFirstChild(ModuleReference) or error("Module not found")
@@ -65,54 +59,57 @@ function RuGuiAdaptor.LoadModuleUI(ModuleReference: ModuleScript | string, Paren
 
     local RequiredModule = require(ModuleReference)
 
-    local NewWindow
-    local Context
-
-    if RequiredModule then
-        NewWindow = RuGui.CreateWindow(1, 1, Configuration.Title)
-        NewWindow:CreateContext()
-        Context = NewWindow.Context
-
-        NewWindow.WindowScreenGui.Parent = Parent
-
-        -- Optimized ConnectFunctionality function
-        local function ConnectFunctionality(ObjectContext, ObjectData)
-            local functionalityExist = RequiredModule.Functionality[ObjectData.Name]
-            if functionalityExist then
-                for _, _function in pairs(functionalityExist) do
-                    _function(ObjectContext[ObjectData.Type])
-                end
-            end
-        end
-
-        local Toolbar = RequiredModule.Toolbar
-        local Docks = RequiredModule.Docks
-        local Panels = RequiredModule.Panels
-
-        -- Process Docks, Panels, and Toolbar without task.wait or coroutine.wrap
-        local function createObjects(ObjectDataTable)
-            for _, ObjectData in pairs(ObjectDataTable) do
-                pcall(function()
-                    CreateOBJ(Context, ObjectData, ConnectFunctionality)
-                end, function(err) warn(tostring(err)) end)
-            end
-        end
-
-        -- change RuGui too a Layer Rendering Based UI system, instead of loading like this
-        -- maybe keep Docks as its own table because its the damn docks
-
-        createObjects(Docks)
-        createObjects(Panels)
-        createObjects(Toolbar)
-
-    else
+    if not RequiredModule then
         error("Required module is empty or invalid.")
     end
 
+    local NewWindow = RuGui.CreateWindow(1, 1, Configuration.Title)
+    NewWindow:CreateContext()
+    local Context = NewWindow.Context
+    NewWindow.WindowScreenGui.Parent = Parent
+
+    local function ConnectFunctionality(Object, ObjectData)
+        local functionalityExist = RequiredModule.Functionality[ObjectData.Name]
+        if functionalityExist then
+            for _, _function in pairs(functionalityExist) do
+                _function(Object[ObjectData.Type])
+            end
+        end
+    end
+
+    local SortedObjectOrder = {}
+
+    local function SortObjects(Title, ObjectDataTable)
+        local thisSorted = {}
+        for _, ObjectData in pairs(ObjectDataTable) do
+            thisSorted[ObjectData.Priority or #thisSorted + 1] = ObjectData
+        end
+        SortedObjectOrder[Title] = thisSorted
+    end
+
+    local function CreateAllObjects()
+        for _, ObjectDataTable in pairs(SortedObjectOrder) do
+            for _, ObjectData in pairs(ObjectDataTable) do
+                pcall(function()
+                    CreateOBJ(Context, ObjectData, ConnectFunctionality)
+                end, function(err)
+                    warn("Error creating object:", err)
+                end)
+            end
+        end
+    end
+
+    SortObjects("Docks", RequiredModule.Docks)
+    SortObjects("Panels", RequiredModule.Panels)
+    SortObjects("Toolbar", RequiredModule.Toolbar)
+    SortObjects("QuickActions", RequiredModule.QuickActions)
+
+    CreateAllObjects()
+
     local Data = {
-        Window = NewWindow;
-        Context = Context;
-        Module = RequiredModule;
+        Window = NewWindow,
+        Context = Context,
+        Module = RequiredModule,
     }
 
     RuGuiAdaptor.LoadedModules[Configuration.Title] = Data
@@ -120,7 +117,6 @@ function RuGuiAdaptor.LoadModuleUI(ModuleReference: ModuleScript | string, Paren
     return Data
 end
 
--- Optimized FindModule function for fast lookup
 function RuGuiAdaptor.FindModule(Title)
     return RuGuiAdaptor.LoadedModules[Title] or {}
 end

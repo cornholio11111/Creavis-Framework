@@ -355,7 +355,7 @@ function RuGuiCreateContext:CreateWidget(Title:string, Properties:{Position:UDim
 end
 
 -- // Frames get added into widgets
-function RuGuiCreateContext:CreateFrame(Title, Properties:{ParentWidget:string, Position:UDim2, Size:UDim2, StyleID:string?}, WidgetID:string)
+function RuGuiCreateContext:CreateFrame(Title, Properties:{Position:UDim2, Size:UDim2, StyleID:string?}, WidgetID:string)
     WidgetID = WidgetID or "None"
     Properties.StyleID = Properties.StyleID or "None"
 
