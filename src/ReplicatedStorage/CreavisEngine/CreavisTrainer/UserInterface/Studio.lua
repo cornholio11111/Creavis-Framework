@@ -36,7 +36,8 @@ return {
                 Size = UDim2.new(1, 0, 0.032, 0),
                 BackgroundColor3 = Color3.fromRGB(200, 200, 200),
                 ClipDescendants = true,
-                Dockable = false
+                Dockable = false,
+                StyleID = "Toolbar"
             },
         },
 
@@ -45,8 +46,8 @@ return {
             Name = "QuickActions",
             Priority = 2,
             Properties = {
-                Position = UDim2.new(0.5, 0, 0.07, 0),
-                Size = UDim2.new(1, 0, 0.06, 0),
+                Position = UDim2.new(0.5, 0, 0.069, 0),
+                Size = UDim2.new(1, 0, 0.065, 0),
                 BackgroundColor3 = Color3.fromRGB(200, 200, 200),
                 Dockable = false
             },
@@ -87,9 +88,12 @@ return {
                 Dockable = true
             },
         },
+    },
 
+    -- Panels and Widgets
+    Panels = {
         -- // Quick Actions
-        QuickActionsBackground = { -- // Title, Properties:{Position:UDim2, Size:UDim2, StyleID:string?}, WidgetID
+        QuickActionsPages = { -- // Title, Properties:{Position:UDim2, Size:UDim2, StyleID:string?}, WidgetID
             Type = "Frame",
             Name = "QuickActionsPages",
             Priority = 6,
@@ -97,43 +101,9 @@ return {
                 Position = UDim2.new(0.5, 0, 0.5, 0),
                 Size = UDim2.new(1, 0, 1, 0),
             },
-            Dock = "QuickActions"
+            Parent = "QuickActions"
         },
 
-    },
-
-    -- Quick Actions
-    QuickActions = {
-        QAHomePage_MovementTools = {
-            Type = "List",
-            Name = "HomePageMovementTools",
-            Priority = 1,
-            Properties = {
-                Size = UDim2.new(0.2, 0, 1, 0),
-
-                BackgroundColor3 = Color3.fromRGB(240, 240, 240),
-                Scrollable = true,
-            },
-            Parent = "HomePage",
-        },
-
-        QAHomePage_MovementTools_Select = {
-            Type = "Button",
-            Name = "Select",
-            Priority = 2,
-            Properties = {
-                Size = UDim2.new(0, 30, 0, 30),
-
-                BackgroundColor3 = Color3.fromRGB(240, 240, 240),
-                Scrollable = true,
-            },
-            Parent = "HomePageMovementTools",
-        },
-
-    },
-
-    -- Panels and Widgets
-    Panels = {
         ExplorerPanel = {
             Type = "Widget",
             Name = "Explorer",
@@ -260,11 +230,11 @@ return {
 
             Options = {
                 NewWorkspace = {
-                    Name = "NewWorkspace",
+                    Name = "NewMod",
                     Priority = 1,
                     Properties = {
-                        Text = "New Workspace",
-                        StyleID = "Button",
+                        Text = "New Mod",
+                        StyleID = "OptionsButton",
                     },
 
                     ConnectFunctionality = nil,
@@ -272,11 +242,11 @@ return {
                 },
 
                 Save = {
-                    Name = "SaveWorkspace",
+                    Name = "SaveMod",
                     Priority = 2,
                     Properties = {
-                        Text = "Save Workspace",
-                        StyleID = "Button",
+                        Text = "Save Mod",
+                        StyleID = "OptionsButton",
                     },
 
                     ConnectFunctionality = nil,
@@ -289,8 +259,8 @@ return {
                     Name = "Exit",
                     Priority = 4,
                     Properties = {
-                        Text = "File",
-                        StyleID = "Button",
+                        Text = "Exit",
+                        StyleID = "OptionsButton",
                     },
 
                     MouseButton1ClickActivation = nil,
@@ -337,5 +307,36 @@ return {
 
             Parent = "ToolbarPanel"
         },
+    },
+
+    
+    -- Quick Actions
+    QuickActions = {
+        QAHomePage_MovementTools = {
+            Type = "List",
+            Name = "HomePageMovementTools",
+            Priority = 1,
+            Properties = {
+                Size = UDim2.new(0.2, 0, 1, 0),
+
+                BackgroundColor3 = Color3.fromRGB(240, 240, 240),
+                Scrollable = true,
+            },
+            Parent = "HomePage",
+        },
+
+        QAHomePage_MovementTools_Select = {
+            Type = "Button",
+            Name = "Select",
+            Priority = 2,
+            Properties = {
+                Size = UDim2.new(0, 30, 0, 30),
+
+                BackgroundColor3 = Color3.fromRGB(240, 240, 240),
+                Scrollable = true,
+            },
+            Parent = "HomePageMovementTools",
+        },
+
     },
 }

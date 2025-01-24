@@ -31,6 +31,12 @@ return {
         TextScaled = true
     },
 
+    toolbar = {
+        BackgroundColor3 = Color3.fromRGB(31, 32, 32);
+        BorderSizePixel = 0;
+        BackgroundTransparency = 0;
+    },
+
     -- // base ui
     uiframe = {
         BackgroundColor3 = Color3.fromRGB(40, 40, 40);
@@ -44,7 +50,7 @@ return {
         BackgroundColor3 = Color3.fromRGB(40, 40, 40);
         BackgroundTransparency = 1;
     },
-
+    
     -- // Buttons
 
     textbutton = {
@@ -57,4 +63,11 @@ return {
     imagebutton = {
 
     },
+
+    optionsbutton = {
+        BackgroundColor3 = Color3.fromRGB(26, 26, 26);
+        TextColor3 = Color3.fromRGB(200, 200, 200);
+        TextScaled = true;
+        BorderSizePixel = 0;
+    }
 }

@@ -150,7 +150,7 @@ end
 --#region User Interface Creation
 
 -- // Creating User Interface
-function RuGuiCreateContext:CreateDockFrame(Title:string, Properties:{Position:UDim2, Size:UDim2, Dockable:boolean?})
+function RuGuiCreateContext:CreateDockFrame(Title:string, Properties:{Position:UDim2, Size:UDim2, Dockable:boolean?, StyleID:string?})
     local Dock = Instance.new("Frame", self.RuGuiData.WindowBaseFrame.Docks)
     Dock.Name = Title
     Dock.LayoutOrder = #self.Docks + 1
@@ -164,7 +164,7 @@ function RuGuiCreateContext:CreateDockFrame(Title:string, Properties:{Position:U
     Dock:SetAttribute("Dockable", Properties.Dockable) -- << If something can dock to this DockFrame
     Dock:SetAttribute("Type", "Dock")
 
-    Dock:SetAttribute("Style", "Dock")
+    Dock:SetAttribute("Style", Properties.StyleID or "Dock")
 
     self.Docks[string.lower(Title)] = {Dock = Dock, Data = {Widgets = {};}} -- << EXAMPLE: {Name:string, LayoutOrder:number, Selected:boolean}
 
@@ -355,17 +355,8 @@ function RuGuiCreateContext:CreateWidget(Title:string, Properties:{Position:UDim
 end
 
 -- // Frames get added into widgets
-function RuGuiCreateContext:CreateFrame(Title, Properties:{Position:UDim2, Size:UDim2, StyleID:string?}, WidgetID:string)
-    WidgetID = WidgetID or "None"
+function RuGuiCreateContext:CreateFrame(Title, Properties:{Position:UDim2, Size:UDim2, StyleID:string?}, WidgetReference:UIBase)
     Properties.StyleID = Properties.StyleID or "None"
-
-    if WidgetID == "None" then
-        error("Widget Parent ID wasn't passed")
-    elseif not self.Widgets[string.lower(WidgetID)] then
-        error("Widget Not Found in self.Widgets in Rugui!")
-    end
-
-    local WidgetReference = self.Widgets[string.lower(WidgetID)]
 
     local Frame = Instance.new("Frame")
     Frame.Name = Title
@@ -376,6 +367,8 @@ function RuGuiCreateContext:CreateFrame(Title, Properties:{Position:UDim2, Size:
 
     Frame.Position = Properties.Position
     Frame.Size = Properties.Size
+
+    Frame.Parent = WidgetReference
 
     self.Objects[string.lower(Title)] = Frame
     ApplyStyle(self, Frame)
@@ -580,6 +573,7 @@ function RuGuiCreateContext:CreateDropdown(Title:string, Properties: { Position:
 
     DropdownContext.ListLayout = Instance.new("UIListLayout", DropdownContext.DropdownBox)
     DropdownContext.ListLayout.FillDirection = Enum.FillDirection.Vertical
+    DropdownContext.ListLayout.SortOrder = Enum.SortOrder.LayoutOrder
     DropdownContext.ListLayout.Padding = UDim.new(0, 5)
 
     DropdownContext.DropdownBox:SetAttribute("Style", 'Widget')
@@ -615,15 +609,22 @@ function RuGuiCreateContext:CreateDropdown(Title:string, Properties: { Position:
 
     function DropdownContext.AddOption(OptionsData, Parent)
         print(OptionsData)
+
+        if OptionsData.Type == 'Seperator' then return end
+
         local OptionButton = self:CreateButton(OptionsData.Name, {
+            Position = UDim2.new(0, 0, 0, 0),
             Size = UDim2.new(1, 0, 0, 15),
             BorderSizePixel = 0,
             TextScaled = true,
             Text = OptionsData.Properties.Text,
-            BackgroundTransparency = 1
+            BackgroundTransparency = 1,
+            StyleID = OptionsData.Properties.StyleID
         }, Parent)
 
-        OptionButton.MouseButton1Click:Connect(function()
+        OptionButton.LayoutOrder = OptionsData.Priority
+
+        OptionButton.Button.MouseButton1Click:Connect(function()
             DropdownContext.DropdownBox.Visible = false
         end)
     end

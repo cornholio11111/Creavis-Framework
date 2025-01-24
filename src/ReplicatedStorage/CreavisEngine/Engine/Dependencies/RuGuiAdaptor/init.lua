@@ -33,8 +33,18 @@ local function CreateOBJ(Context, ObjectData, ConnectFunctionality)
     local ObjectContext = Context["Create" .. Type](Context, table.unpack(Packet))
 
     if ObjectType == "Dropdown" then
-        for _, OptionsData in pairs(Options or {}) do
-            ObjectContext:AddOption(OptionsData, ObjectContext.DropdownBox)
+       local SortedOptions = {}
+
+        for _, OptionsData in pairs(Options) do
+            table.insert(SortedOptions, OptionsData)
+        end
+
+        table.sort(SortedOptions, function(a, b)
+            return (a.Priority or 0) < (b.Priority or 0)
+        end)
+
+        for _, OptionsData in ipairs(SortedOptions) do
+            ObjectContext.AddOption(OptionsData, ObjectContext.DropdownBox)
         end
     end
 
@@ -70,6 +80,7 @@ function RuGuiAdaptor.LoadModuleUI(ModuleReference: ModuleScript | string, Paren
 
     local function ConnectFunctionality(Object, ObjectData)
         local functionalityExist = RequiredModule.Functionality[ObjectData.Name]
+
         if functionalityExist then
             for _, _function in pairs(functionalityExist) do
                 _function(Object[ObjectData.Type])
@@ -77,34 +88,22 @@ function RuGuiAdaptor.LoadModuleUI(ModuleReference: ModuleScript | string, Paren
         end
     end
 
-    local SortedObjectOrder = {}
-
-    local function SortObjects(Title, ObjectDataTable)
-        local thisSorted = {}
+    local function CreateObjects(ObjectDataTable)
         for _, ObjectData in pairs(ObjectDataTable) do
-            thisSorted[ObjectData.Priority or #thisSorted + 1] = ObjectData
-        end
-        SortedObjectOrder[Title] = thisSorted
-    end
+            local success, err = pcall(function()
+                CreateOBJ(Context, ObjectData, ConnectFunctionality)
+            end)
 
-    local function CreateAllObjects()
-        for _, ObjectDataTable in pairs(SortedObjectOrder) do
-            for _, ObjectData in pairs(ObjectDataTable) do
-                pcall(function()
-                    CreateOBJ(Context, ObjectData, ConnectFunctionality)
-                end, function(err)
-                    warn("Error creating object:", err)
-                end)
+            if not success then
+                warn(string.format("Error creating object '%s': %s", ObjectData.Name or "Unknown", err))
             end
         end
-    end
+    end    
 
-    SortObjects("Docks", RequiredModule.Docks)
-    SortObjects("Panels", RequiredModule.Panels)
-    SortObjects("Toolbar", RequiredModule.Toolbar)
-    SortObjects("QuickActions", RequiredModule.QuickActions)
-
-    CreateAllObjects()
+    CreateObjects(RequiredModule.Docks)
+    CreateObjects(RequiredModule.Panels)
+    CreateObjects(RequiredModule.Toolbar)
+    -- CreateObjects(RequiredModule.QuickActions)
 
     local Data = {
         Window = NewWindow,
