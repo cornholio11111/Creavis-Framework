@@ -1,1 +1,0 @@
-Services are like :GetService() for the users, IntelliSense uses the services to understand the code

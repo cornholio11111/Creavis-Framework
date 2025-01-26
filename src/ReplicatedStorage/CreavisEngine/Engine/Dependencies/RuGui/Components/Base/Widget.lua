@@ -1,9 +1,13 @@
 local RunService = game:GetService("RunService")
 local Widget = {}
 
-function Widget.new(self, Title:string, Properties:{Position:UDim2, Size:UDim2, StyleID:string?}, DockAt:string?)
+function Widget.new(self, Title:string, Properties:{Position:UDim2, Size:UDim2, StyleID:string?, CanDock:boolean?, HeaderTitle:string?}, DockAt:string?)
     DockAt = DockAt or "None"
-    Properties.StyleID = Properties.StyleID or "None"
+    
+    if not Properties.DockAt then Properties.DockAt = "None" end
+    if not Properties.StyleID then Properties.StyleID = "Widget" end
+    if not Properties.CanDock then Properties.CanDock = true end
+    if not Properties.HeaderTitle then Properties.HeaderTitle = Title end
 
     local Widget = Instance.new("Frame", self.RuGuiData.WindowBaseFrame.Widgets)
     Widget.Name = Title
@@ -11,8 +15,10 @@ function Widget.new(self, Title:string, Properties:{Position:UDim2, Size:UDim2, 
     Widget.ZIndex = #self.Widgets + 1
     Widget.AnchorPoint = Vector2.new(.5, .5)
     Widget:SetAttribute("Type", "Widget")
-    Widget:SetAttribute("Style", "Widget")
+    Widget:SetAttribute("Style", Properties.StyleID)
     Widget:SetAttribute("D_Index", Widget.ZIndex)
+
+    Widget:SetAttribute("CanDock", Properties.CanDock)
 
     Widget:SetAttribute("DockID", 'nil')
 
@@ -41,7 +47,7 @@ function Widget.new(self, Title:string, Properties:{Position:UDim2, Size:UDim2, 
     Label.Size = UDim2.new(0.8, 0, .8, 0)
     Label.Position = UDim2.new(0.05, 0, 0, 0) -- Slight left margin
     Label.BackgroundTransparency = 1
-    Label.Text = Title
+    Label.Text = Properties.HeaderTitle
     Label.TextColor3 = Color3.fromRGB(255, 255, 255)
     Label.TextScaled = true
     Label.Font = Enum.Font.GothamMedium
@@ -102,7 +108,7 @@ function Widget.new(self, Title:string, Properties:{Position:UDim2, Size:UDim2, 
                 if IsDragging then
                     for _, dock in pairs(self.Docks) do
                         dock = dock.Dock
-                        if dock:GetAttribute("Dockable") and self.IsNearDock(dock, 15) then
+                        if dock:GetAttribute("Dockable") and self.IsNearDock(dock, 15) and Properties.CanDock then
                             wannaDock = dock
 
                             dock.BackgroundColor3 = Color3.fromRGB(0, 0, 225)
@@ -128,7 +134,7 @@ function Widget.new(self, Title:string, Properties:{Position:UDim2, Size:UDim2, 
 
         RunService:UnbindFromRenderStep("DragRenderStepped"..Title)
 
-        if wannaDock ~= nil then
+        if wannaDock ~= nil and Properties.CanDock then
             self.ApplyStyle(self, wannaDock)
             self:DockWidget(Title, wannaDock.Name)
         end

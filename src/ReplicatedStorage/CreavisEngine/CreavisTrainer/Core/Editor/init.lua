@@ -18,7 +18,7 @@ local Dependencies = {
     };
 
     shared = {
-
+        ChangeHistory = script.ChangeHistory;
     };
 }
 
@@ -71,7 +71,7 @@ function Editor.Initialize(CreavisEngine)
 end
 
 function Editor:ConnectServer()
-    
+    self.Dependencies.shared.ChangeHistory.Initialize(self)
 end
 
 function Editor:ConnectClient()
@@ -85,6 +85,7 @@ function Editor:ConnectClient()
     task.wait()
 
     self.Dependencies.client.Freecam:EnableFreecam()
+    self.Dependencies.shared.ChangeHistory.Initialize(self)
     self.Dependencies.client.MovementTools.Initialize(self)
     self.Dependencies.client.InputHandler.Initialize(self)
 end

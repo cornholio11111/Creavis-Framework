@@ -1,5 +1,3 @@
-local Players = game:GetService("Players")
-local RunService = game:GetService("RunService")
 -- Change Tool
 
 -- Input Handler
@@ -11,12 +9,20 @@ local RunService = game:GetService("RunService")
 local MovementTools = {}
 MovementTools.__index = MovementTools
 
-function MovementTools.Initialize(EdtiorReference)
+function MovementTools.Initialize(EditorReference)
     local self = setmetatable({}, MovementTools)
-    self.EdtiorReference = EdtiorReference
+    self.EditorReference = EditorReference
 
     self.CurrentTool = "None"
     self.CurrentSelection = {}
+
+    local ToolFolder = Instance.new("Folder", workspace:WaitForChild("Trainer"):WaitForChild("Client"))
+    ToolFolder.Name = "Tools"
+
+    self.ToolInstances = {
+        Arcs = Instance.new("ArcHandles", ToolFolder);
+        Handles = Instance.new("Handles", ToolFolder);
+    }
 
     self:Connect()
     return self
