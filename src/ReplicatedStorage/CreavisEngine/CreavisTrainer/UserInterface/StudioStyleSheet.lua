@@ -7,6 +7,10 @@ return {
         BorderSizePixel = 0;
     },
 
+    resizebar = {
+        BackgroundTransparency = 1;
+    },
+
     -- // Widgets
     widget = {
         BackgroundColor3 = Color3.fromRGB(31, 32, 32);

@@ -15,7 +15,7 @@ local CreavisEngine = {
     Mods = {}; -- >> Enabled mods are added into this array
     -- Mod Example: {Title:string, ModData:{}, Dependencies:{}}
 
-    Dependencies = {Engine = {}, Mod = {}}; -- >> Packages that are needed for the mods to load
+    Dependencies = {Engine = {}, Mod = {}, Plugin = {}}; -- >> Packages that are needed for the mods to load
     -- Registered with one of 3 ids, "Engine", "Editor", "Mod", or "Plugin"
     -- Dependency Example: {Priority:Enum.ContextActionPriority, Title:string, ModuleData:{}}
     -- maybe also store the mod name or id smth about the mod in the dependency mods

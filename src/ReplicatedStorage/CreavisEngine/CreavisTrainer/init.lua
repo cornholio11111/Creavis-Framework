@@ -42,12 +42,13 @@ end
 function Trainer:ConnectClient()
     local Client = self.Client
 
-    self.References.Editor = self.References.Editor.Initialize(self) -- << Starts Editor
+    Client.Editor = self.References.Editor.Initialize(self) -- << Starts Editor
 end
 
 function Trainer:ConnectServer()
     local Server = self.Server
 
+    Server.Editor = self.References.Editor.Initialize(self) -- << Starts Editor
 end
 
 return Trainer
