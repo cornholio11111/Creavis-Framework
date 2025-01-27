@@ -30,7 +30,9 @@ local function CreateOBJ(Context, ObjectData, ConnectFunctionality)
     local Options = ObjectData.Options or {}
     local Type = ObjectData.Type
 
-    local ObjectContext = Context["Create" .. Type](Context, table.unpack(Packet))
+    -- local ObjectContext = Context["Create" .. Type](Context, table.unpack(Packet))
+
+    local ObjectContext = Context.CreateObject(Context, Type, table.unpack(Packet))
 
     if ObjectType == "Dropdown" then
        local SortedOptions = {}
@@ -103,7 +105,7 @@ function RuGuiAdaptor.LoadModuleUI(ModuleReference: ModuleScript | string, Paren
     CreateObjects(RequiredModule.Docks)
     CreateObjects(RequiredModule.Panels)
     CreateObjects(RequiredModule.Toolbar)
-    -- CreateObjects(RequiredModule.QuickActions)
+    CreateObjects(RequiredModule.QuickActions)
 
     local Data = {
         Window = NewWindow,

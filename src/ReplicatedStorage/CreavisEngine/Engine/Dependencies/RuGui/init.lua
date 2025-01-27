@@ -34,6 +34,8 @@ local RequiredComponents = {
 
     Dropdown = require(ComponentsFolder.Dropdown);
     TabList = require(ComponentsFolder.TabList);
+    StackedButton = require(ComponentsFolder.StackedButton);
+    PromptWindow = require(ComponentsFolder.PromptWindow);
 }
 
 local RuGuiCreateContext = {}
@@ -181,55 +183,16 @@ function RuGuiCreateContext.AddExtension(self, Parent:UIBase, ExtensionID:string
     end
 end
 
+-- // Creating UI
+function RuGuiCreateContext:CreateObject(ObjectID:string, Title:string, Properties, Parent:any?)
+    local OBJReference = RequiredComponents[ObjectID]
 
---#endregion
-
---#region User Interface Creation
-
--- // Creating User Interface
-function RuGuiCreateContext:CreateDockFrame(Title:string, Properties:{Position:UDim2, Size:UDim2, Dockable:boolean?, StyleID:string?})
-    return RequiredComponents.DockFrame.new(self, Title, Properties)
+    if OBJReference then
+        return OBJReference.new(self, Title, Properties, Parent)
+    else
+        warn(ObjectID.." isnt a valid object type!")
+    end
 end
-
--- // Widgets are draggable its a cool system
-function RuGuiCreateContext:CreateWidget(Title:string, Properties:{Position:UDim2, Size:UDim2, StyleID:string?}, DockAt:string?)
-    return RequiredComponents.Widget.new(self, Title, Properties, DockAt)
-end
-
--- // Frames get added into widgets
-function RuGuiCreateContext:CreateFrame(Title, Properties:{Position:UDim2, Size:UDim2, StyleID:string?}, WidgetReference:UIBase)
-    return RequiredComponents.Frame.new(self, Title, Properties, WidgetReference)
-end
-
-function RuGuiCreateContext:CreateScrollMenu(Title:string, Properties:{UseListLayout:boolean?, UseGridLayout:boolean?, LayoutPadding:UDim2?, SortOrder:Enum.SortOrder?, Position:UDim2, Size:UDim2}, ParentID:string)
-    return RequiredComponents.ScrollMenu.new(self, Title, Properties, ParentID)
-end
-
-function RuGuiCreateContext:CreateMenu(Title:string, Properties:{UseListLayout:boolean?, UIPadding:UDim?, CellPadding:UDim2?, SortOrder:Enum.SortOrder?, Position:UDim2, Size:UDim2}, WidgetID:string)
-    return RequiredComponents.Menu.new(self, Title, Properties, WidgetID)
-end
-
-function RuGuiCreateContext:CreateList(Title: string, Properties: {Position: UDim2?, FillDirection: Enum.FillDirection?, Size: UDim2?, AutoAligned: boolean?, UIPadding: UDim?, StyleID: string?, LayoutType: string?}, ParentReference: UIBase)
-    return RequiredComponents.List.new(self, Title, Properties, ParentReference)
-end
-
-function RuGuiCreateContext:CreateButton(Title:string, Properties: {Position:UDim2, Size:UDim2, Text:string?, IsImage:boolean?, Image:string?, StyleID:string?}, ParentReference:UIBase)
-    RequiredComponents.Button.new(self, Title, Properties, ParentReference)
-end
-
-function RuGuiCreateContext:CreateDropdown(Title:string, Properties: { Position: UDim2, Size: UDim2, Text: string?, IsImage: boolean?, Image: string?}, ParentReference: UIBase)
-    return RequiredComponents.Dropdown.new(self, Title, Properties, ParentReference)
-end
-
-function RuGuiCreateContext:CreateLabel(Title: string, Properties: { Position: UDim2, Size: UDim2, Text: string?, IsImage: boolean?, Image: string?, Editable: boolean? }, ParentReference: UIBase)
-    return RequiredComponents.Label.new(self, Title, Properties, ParentReference)
-end
-
-function RuGuiCreateContext:CreateTabList(Title: string, Properties: { Position: UDim2, Size: UDim2, StyleID:string? }, ParentReference: UIBase)
-    return RequiredComponents.TabList.new(self, Title, Properties, ParentReference)
-end
-
---#endregion
 
 function RuGuiCreateContext:Terminate() 
     -->> Any clean up may needed should be added here

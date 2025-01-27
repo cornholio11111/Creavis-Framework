@@ -65,8 +65,6 @@ function Dropdown.new(self, Title:string, Properties: { Position: UDim2, Size: U
     end)
 
     function DropdownContext.AddOption(OptionsData, Parent)
-        print(OptionsData)
-
         if OptionsData.Type == 'Seperator' then return end
 
         local OptionButton = Button.new(self, OptionsData.Name, {

@@ -3,7 +3,7 @@ local DataStoreService = game:GetService("DataStoreService")
 local Interpreter = require(script.Interpreter)
 local Packager = require(script.Packager)
 
-local Roblox_Custom_Encryption = require(script.Parent.Parent.Utilities.RCE)
+local Roblox_Custom_Encryption = require(script.Parent.Parent.Utilities.RobloxCustomEncryption)
 
 local ModDatastore = {}
 

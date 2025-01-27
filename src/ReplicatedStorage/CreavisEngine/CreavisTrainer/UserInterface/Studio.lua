@@ -100,6 +100,7 @@ return {
             Properties = {
                 Position = UDim2.new(0.5, 0, 0.5, 0),
                 Size = UDim2.new(1, 0, 1, 0),
+                ZIndex = 100,
             },
             Parent = "QuickActions"
         },
@@ -149,9 +150,10 @@ return {
             Properties = {
                 Position = UDim2.new(0.5, 0, 0.5, 0),
                 Size = UDim2.new(1, 0, 1, 0),
+                HorizontalAlignment = Enum.HorizontalAlignment.Center,
                 FillDirection = Enum.FillDirection.Horizontal,
                 UIPadding = UDim.new(0, 0),
-                LayoutType = "List"
+                LayoutType = "List",
             },
             Parent = "Toolbar"
         },
@@ -164,8 +166,8 @@ return {
                 Position = UDim2.new(0.5, 0, 0.5, 0),
                 Size = UDim2.new(1, 0, 1, 0),
                 FillDirection = Enum.FillDirection.Vertical,
-                UIPadding = UDim.new(0, 0),
-                LayoutType = "List",
+                LayoutType = "Grid",
+                CellSize = UDim2.new(0.2, 0, 0.8, 0),
             },
             Parent = "QuickActionsPages"
         },
@@ -233,7 +235,7 @@ return {
                     Name = "NewMod",
                     Priority = 1,
                     Properties = {
-                        Text = "New Mod",
+                        Text = "Create New Workspace",
                         StyleID = "OptionsButton",
                     },
 
@@ -245,7 +247,7 @@ return {
                     Name = "SaveMod",
                     Priority = 2,
                     Properties = {
-                        Text = "Save Mod",
+                        Text = "Save Workspace",
                         StyleID = "OptionsButton",
                     },
 
@@ -302,7 +304,41 @@ return {
             },
 
             Options = {
+                ToggleExplorerPanel = {
+                    Name = "ExplorerPanelToggle",
+                    Priority = 1,
+                    Properties = {
+                        Text = "Explorer Panel",
+                        StyleID = "OptionsButton",
+                    },
 
+                    ConnectFunctionality = nil,
+                    MouseButton1ClickActivation = nil,
+                },
+
+                TogglePropertiesPanel = {
+                    Name = "PropertiesPanelToggle",
+                    Priority = 1,
+                    Properties = {
+                        Text = "Properties Panel",
+                        StyleID = "OptionsButton",
+                    },
+
+                    ConnectFunctionality = nil,
+                    MouseButton1ClickActivation = nil,
+                },
+
+                ToggleOutput = {
+                    Name = "OutputPanelToggle",
+                    Priority = 1,
+                    Properties = {
+                        Text = "Output Panel",
+                        StyleID = "OptionsButton",
+                    },
+
+                    ConnectFunctionality = nil,
+                    MouseButton1ClickActivation = nil,
+                },
             },
 
             Parent = "ToolbarPanel"
@@ -326,11 +362,14 @@ return {
         },
 
         QAHomePage_MovementTools_Select = {
-            Type = "Button",
+            Type = "StackedButton",
             Name = "Select",
             Priority = 2,
             Properties = {
+                Position = UDim2.new(0, 0, 0, 0),
                 Size = UDim2.new(0, 30, 0, 30),
+                IsImage = true,
+                Image = "",
 
                 BackgroundColor3 = Color3.fromRGB(240, 240, 240),
                 Scrollable = true,

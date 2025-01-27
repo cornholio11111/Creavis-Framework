@@ -1,7 +1,8 @@
 local Frame = {}
 
-function Frame.new(self, Title, Properties:{Position:UDim2, Size:UDim2, StyleID:string?}, WidgetReference:UIBase)
-    Properties.StyleID = Properties.StyleID or "UIFrame"
+function Frame.new(self, Title, Properties:{Position:UDim2, Size:UDim2, StyleID:string?, ZIndex:number?}, WidgetReference:UIBase)
+    if not Properties.StyleID then Properties.StyleID = "UIFrame" end
+    if not Properties.ZIndex then Properties.ZIndex = 200 end
 
     local Frame = Instance.new("Frame")
     Frame.Name = Title
