@@ -1,21 +1,26 @@
 local List = {}
 
-function List.new(self, Title: string, Properties: {Position: UDim2?, FillDirection: Enum.FillDirection?, Size: UDim2?, AutoAligned: boolean?, UIPadding: UDim?, StyleID: string?, LayoutType: string?, CellSize:UDim2?, VerticalAlignment:Enum.VerticalAlignment?, HorizontalAlignment:Enum.HorizontalAlignment?, ZIndex:number?}, ParentReference: UIBase)
+function List.new(self, Title: string, 
+    Properties: {Position: UDim2?, FillDirection: Enum.FillDirection?, Size: UDim2?, AutoAligned: boolean?,  UIPadding: UDim?, StyleID: string?, LayoutType: string?, CellSize:UDim2?, VerticalAlignment:Enum.VerticalAlignment?, HorizontalAlignment:Enum.HorizontalAlignment?,  ZIndex:number?}, 
+    ParentReference: Instance, extra)
     if not Properties.StyleID then Properties.StyleID = "HorizontalList" end
     if not Properties.LayoutType then Properties.LayoutType = "List" end
     if not Properties.UIPadding then Properties.UIPadding = UDim.new(0.25, 0) end
     if not Properties.CellSize then Properties.CellSize = UDim2.new(.003, 0, .8, 0) end
     if not Properties.HorizontalAlignment then Properties.HorizontalAlignment = Enum.HorizontalAlignment.Left end
     if not Properties.VerticalAlignment then Properties.VerticalAlignment = Enum.VerticalAlignment.Center end
-    if not Properties.ZIndex then Properties.ZIndex = #ParentReference:GetChildren() + 1 end
+    if not Properties.ZIndex then Properties.ZIndex = 5 end
+
+    -- << #ParentReference:GetChildren() + 1
 
     local HorizontalList = Instance.new("Frame")
     HorizontalList.Name = Title
     HorizontalList.AnchorPoint = Vector2.new(0.5, 0.5)
+
     HorizontalList:SetAttribute("Type", "HorizontalList")
     HorizontalList:SetAttribute("Style", Properties.StyleID)
-    HorizontalList.LayoutOrder = Properties.ZIndex
 
+    HorizontalList.LayoutOrder = Properties.ZIndex
     HorizontalList.ZIndex = Properties.ZIndex
 
     local Layout

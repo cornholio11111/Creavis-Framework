@@ -1,9 +1,12 @@
 local Dock = {}
 
-function Dock.new(self, Title:string, Properties:{Position:UDim2, Size:UDim2, Dockable:boolean?, StyleID:string?})
+function Dock.new(self, Title:string, Properties:{Position:UDim2, Size:UDim2, Dockable:boolean?, StyleID:string?, ZIndex:number?})
+    if not Properties.ZIndex then Properties.ZIndex = #self.Docks + 1 end
+
     local Dock = Instance.new("Frame", self.RuGuiData.WindowBaseFrame.Docks)
     Dock.Name = Title
-    Dock.LayoutOrder = #self.Docks + 1
+    Dock.LayoutOrder = Properties.ZIndex
+    Dock.ZIndex = Properties.ZIndex
     Dock.AnchorPoint = Vector2.new(.5, .5)
 
     Dock.BackgroundTransparency = 1

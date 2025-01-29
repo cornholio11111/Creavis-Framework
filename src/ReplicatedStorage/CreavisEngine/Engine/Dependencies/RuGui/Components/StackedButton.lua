@@ -4,9 +4,10 @@ local Button = require(script.Parent.Base.Button)
 
 local StackedButton = {}
 
-function StackedButton.new(self, Title:string, Properties:{Size:UDim2, Position:UDim2, Image:string, Text:string?}, Parent: UIBase)
+function StackedButton.new(self, Title:string, Properties:{Size:UDim2, Position:UDim2, Image:string, Text:string?, TextScaled:boolean?}, Parent: UIBase)
     if not Properties.Text then Properties.Text = Title end
     if not Properties.Position then Properties.Position = UDim2.new(.1, 0, .1, 0) end
+    if not Properties.TextScaled then Properties.TextScaled = false end
 
     local StackedButtonContext = {}
 
@@ -30,6 +31,7 @@ function StackedButton.new(self, Title:string, Properties:{Size:UDim2, Position:
         Size = UDim2.new(1, 0, .25, 0),
         Text = Properties.Text,
         IsImage = false,
+        TextScaled = Properties.TextScaled,
         Image = Properties.Image
     }, StackedButtonContext.BaseList)
 

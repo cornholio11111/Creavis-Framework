@@ -8,6 +8,7 @@ RuGuiAdaptor.LoadedModules = {}
 
 local function CreatePacket(Context, ObjectData)
     local Parent = ObjectData.Dock or ObjectData.Parent
+    
     if ObjectData.Parent then
         Parent = string.lower(ObjectData.Parent)
         local reference = Context.Objects[Parent]
@@ -61,12 +62,12 @@ function RuGuiAdaptor.LoadModuleUI(ModuleReference: ModuleScript | string, Paren
         ModuleReference = script:FindFirstChild(ModuleReference) or error("Module not found")
     end
 
+    if not Configuration then Configuration = {Title = nil} end
+
+    if not Configuration.Title then Configuration.Title = ModuleReference.Name .. " (Module UI)" end
+
     if not Parent then
         error(".LoadModuleUI() failed to create UI, Parent wasn't sent.")
-    end
-
-    if not Configuration.Title then
-        Configuration.Title = ModuleReference.Name .. " (Module UI)"
     end
 
     local RequiredModule = require(ModuleReference)

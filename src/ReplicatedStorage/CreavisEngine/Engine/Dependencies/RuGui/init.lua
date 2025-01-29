@@ -184,8 +184,10 @@ function RuGuiCreateContext.AddExtension(self, Parent:UIBase, ExtensionID:string
 end
 
 -- // Creating UI
-function RuGuiCreateContext:CreateObject(ObjectID:string, Title:string, Properties, Parent:any?)
+function RuGuiCreateContext:CreateObject(ObjectID:string, Title:string, Properties, Parent:Instance?)
     local OBJReference = RequiredComponents[ObjectID]
+
+    print(ObjectID, Title, Properties, Parent)
 
     if OBJReference then
         return OBJReference.new(self, Title, Properties, Parent)

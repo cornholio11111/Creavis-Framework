@@ -65,7 +65,7 @@ return {
     },
 
     imagebutton = {
-
+        BackgroundTransparency = 1,
     },
 
     optionsbutton = {
@@ -73,5 +73,12 @@ return {
         TextColor3 = Color3.fromRGB(200, 200, 200);
         TextScaled = true;
         BorderSizePixel = 0;
+    },
+
+
+    -- // gen
+
+    background = {
+        BackgroundColor3 = Color3.fromRGB(49, 49, 49);
     }
 }

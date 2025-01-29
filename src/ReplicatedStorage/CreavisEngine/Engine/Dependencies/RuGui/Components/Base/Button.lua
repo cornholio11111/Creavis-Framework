@@ -1,11 +1,12 @@
 local Button = {}
 
-function Button.new(self, Title:string, Properties: {Position:UDim2, Size:UDim2, Text:string?, IsImage:boolean?, Image:string?, StyleID:string?}, ParentReference:UIBase)
+function Button.new(self, Title:string, Properties: {Position:UDim2, Size:UDim2, Text:string?, IsImage:boolean?, Image:string?, StyleID:string?, TextScaled:boolean?}, ParentReference:UIBase)
     if not ParentReference then error("Parent reference is required to create a Button.") end
     local Button
     local _type
-
-    Properties.StyleID = Properties.StyleID or "None"
+    
+    if not Properties.TextScaled then Properties.TextScaled = false end
+    if not Properties.StyleID then Properties.StyleID = "None" end
 
     if Properties.IsImage then
         Button = Instance.new("ImageButton")
@@ -14,6 +15,7 @@ function Button.new(self, Title:string, Properties: {Position:UDim2, Size:UDim2,
     else
         Button = Instance.new("TextButton")
         Button.Text = Properties.Text
+        Button.TextScaled = Properties.TextScaled
         _type = "TextButton"
     end
 
