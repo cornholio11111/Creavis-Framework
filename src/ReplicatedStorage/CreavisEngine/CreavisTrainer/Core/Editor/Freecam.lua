@@ -7,6 +7,8 @@ https://devforum.roblox.com/t/freecam-module-an-easy-way-to-make-freecam-to-your
 
 ]]
 
+local InputHandler = require(script.Parent.InputHandler)
+
 local freecam = {}
 
 local pi    = math.pi

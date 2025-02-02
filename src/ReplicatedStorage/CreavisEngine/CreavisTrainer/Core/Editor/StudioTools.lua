@@ -5,12 +5,13 @@
 -- Mouse Handler
 
 -- Selection Handler
+local InputHandler = require(script.Parent.InputHandler)
 
-local MovementTools = {}
-MovementTools.__index = MovementTools
+local StudioTools = {}
+StudioTools.__index = StudioTools
 
-function MovementTools.Initialize(EditorReference)
-    local self = setmetatable({}, MovementTools)
+function StudioTools.Initialize(EditorReference)
+    local self = setmetatable({}, StudioTools)
     self.EditorReference = EditorReference
 
     self.CurrentTool = "None"
@@ -28,21 +29,17 @@ function MovementTools.Initialize(EditorReference)
     return self
 end
 
-function MovementTools:Connect()
-    
+function StudioTools:Connect()
+    InputHandler:BindKey(Enum.UserInputType.MouseButton1, function() -- << Left Click
+        
+    end)
+
+    InputHandler:BindKey(Enum.UserInputType.MouseButton2, function() -- << Right Click
+        
+    end)
 end
 
-function MovementTools:HandleMouseButtonClick(MouseButtonID:number) -- << Handle when mouse is clicked and detect if a object is selected
-    if MouseButtonID == 1 then
-        
-    end
-
-    if MouseButtonID == 2 then
-        
-    end
-end
-
-function MovementTools:ChangeTool(ToolID:string)
+function StudioTools:ChangeTool(ToolID:string)
     ToolID = string.lower(ToolID)
 
     if ToolID == "move" then
@@ -50,4 +47,4 @@ function MovementTools:ChangeTool(ToolID:string)
     end
 end
 
-return MovementTools
+return StudioTools

@@ -1,6 +1,6 @@
 local Players = game:GetService("Players")
 local UserInterface = script.Parent.Parent.UserInterface
-local StudioInterfaceModule, StudioStyleSheet = UserInterface:WaitForChild("Studio"), UserInterface:WaitForChild("StudioStyleSheet")
+local StudioInterfaceModule, StudioStyleSheet = UserInterface:WaitForChild("ModHub"), UserInterface:WaitForChild("DarkStyleSheet")
 
 local Editor = {}
 Editor.__index = Editor
@@ -9,16 +9,15 @@ local Dependencies = {
     client = {
         InputHandler = script.InputHandler;
         Freecam = script.Freecam;
-        MovementTools = script.MovementTools;
-
     };
 
     server = {
-
+        
     };
 
     shared = {
         ChangeHistory = script.ChangeHistory;
+        StudioTools = script.StudioTools;
     };
 }
 
@@ -79,14 +78,14 @@ function Editor:ConnectClient()
 
     local RuGuiAdaptor = self.CreavisEngine.Dependencies.Engine.RuGuiAdaptor
 
-    local StudioUI = RuGuiAdaptor.LoadModuleUI(StudioInterfaceModule, Players.LocalPlayer.PlayerGui, {Title = 'Studio'})
+    local StudioUI = RuGuiAdaptor.LoadModuleUI(StudioInterfaceModule, Players.LocalPlayer.PlayerGui)
     StudioUI.Context:SetStyleSheet(require(StudioStyleSheet))
 
     task.wait()
 
     self.Dependencies.client.Freecam:EnableFreecam()
     self.Dependencies.shared.ChangeHistory.Initialize(self)
-    self.Dependencies.client.MovementTools.Initialize(self)
+    self.Dependencies.client.StudioTools.Initialize(self)
     self.Dependencies.client.InputHandler.Initialize(self)
 end
 

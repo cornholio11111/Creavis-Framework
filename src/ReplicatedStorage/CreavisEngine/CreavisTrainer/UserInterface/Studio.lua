@@ -348,9 +348,9 @@ return {
     
     -- Quick Actions
     QuickActions = {
-        QAHomePage_MovementTools = {
+        QAHomePage_StudioTools = {
             Type = "List",
-            Name = "HomePageMovementTools",
+            Name = "HomePageStudioTools",
             Priority = 1,
             Properties = {
                 Size = UDim2.new(0.2, 0, 1, 0),
@@ -361,7 +361,7 @@ return {
             Parent = "HomePage",
         },
 
-        QAHomePage_MovementTools_Select = {
+        QAHomePage_StudioTools_Select = {
             Type = "StackedButton",
             Name = "Select",
             Priority = 2,
@@ -374,7 +374,7 @@ return {
                 BackgroundColor3 = Color3.fromRGB(240, 240, 240),
                 Scrollable = true,
             },
-            Parent = "HomePageMovementTools",
+            Parent = "HomePageStudioTools",
         },
 
     },
